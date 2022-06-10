@@ -54,9 +54,9 @@ plantSprites = {
     "green": Sprite(16,0,8,8),
     "pink": Sprite(24,0,8,8),
     "blue": Sprite(16,8,8,8),
-    "orang": Sprite(24,8,8,8)
+    "orang": Sprite(24,8,8,8),
+    "Empty": Sprite(0,0,0,0),
 }
-
 
 class Bed:
     pass
@@ -78,8 +78,10 @@ class Bed:
             wetBedSprite.draw(self.x, self.y)
         else:
             dryBedSprite.draw(self.x, self.y)
+        plantSprites[self.plantType].draw(self.x,self.y)
 
-    def plant(self, type = plantNames[randint(0,len(plantNames)-1)]):
+    def plant(self):
+        type = plantNames[randint(0,len(plantNames)-1)]
         self.isPopulated = True
         self.plantType = type
         self.plantAge = 0
@@ -165,6 +167,10 @@ class App:
     
     def update(self) -> None:
         self.player.move()
+
+        # Testing code
+        if pyxel.btnp(pyxel.KEY_O):
+            self.testBed.plant()
 
     def draw(self) -> None:
         pyxel.cls(3)
