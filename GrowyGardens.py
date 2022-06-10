@@ -46,6 +46,8 @@ playerSprite = Sprite(0,0,8,16,0)
 dryBedSprite = Sprite(8,8,8,8)
 wetBedSprite = Sprite(8,0,8,8)
 
+crowSprite = Sprite(32,0,8,8)
+
 plantNames = ["green","pink","blue","orange"]
 
 plantSprites = {
@@ -95,6 +97,7 @@ class Bed:
             self.timeUntilCrow -= 1
             self.waterLeft -= 1
         
+    
         
 
 class Player:
@@ -160,7 +163,7 @@ class Crow:
         self.arrived = False
 
     def draw(self) -> None:
-        pass
+        crowSprite.draw(self.x, self.y)
 
 class App:
     def __init__(self):
