@@ -428,17 +428,16 @@ class App:
         for row in self.bedList:
             for bed in row:
                 bed.age()
-        clockState=int()
+        
+        clockState=int((((frame_count-self.startFrame)/30)%60)//15)
         if clockState==0:
-            pass #draw clockFirstSprite
+            clockFirstSprite.draw(112,120)
         if clockState==1:
-            pass #draw clockSecondSprite 
+            clockSecondSprite.draw(112,120)
         if clockState==2:
-            pass #draw clockThirdSprite
+            clockThirdSprite.draw(112,120)
         if clockState==3:
-            pass #draw clockFourthSprite
-
-
+            clockFourthSprite.draw(112,120)
 
         self.player.move()
         self.player.act()
