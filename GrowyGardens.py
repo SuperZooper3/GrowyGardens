@@ -33,6 +33,7 @@ bed_row_size = 5
 bed_column_size = 5
 
 # Balance Variables
+player_speed = 2
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
@@ -40,8 +41,8 @@ max_plant_dry = 15 * 30
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 crow_eat_time = 10 * 30
-crow_chance = 0.5
-actionCooldown = 0.5 * 30
+crow_chance = 0.3
+actionCooldown = 0.3 * 30
 collectCooldown = 15 # Number of frames after growing before smth can be collected
 
 class Sprite:
@@ -281,7 +282,7 @@ class Bed:
             self.plantType = type
             self.plantAge = 0
             self.maturityAge = randint(min_plant_age, max_plant_age)
-            self.timeUntilCrow = randint(30, self.maturityAge * (1/crow_chance))
+            self.timeUntilCrow = randint(30, int(self.maturityAge * (1/crow_chance)))
             self.hasCrowSpawned = False
 
     def bonk(self) -> None:
@@ -299,6 +300,7 @@ class Bed:
 
             print(pointsToGive)
             return pointsToGive
+        return 0
 
     def age(self):
 
@@ -345,7 +347,7 @@ class Player:
     def __init__(self, bedList):
         self.x = 0
         self.y = 0
-        self.speed = 1.5
+        self.speed = player_speed
         self.cooldown = 0
         self.direction = 0  # 0 down, 1 left, 2 right, 3 up, for sprite drawing
         self.lastAction = 0  # 0 water, 1 plant, 2 bonk, also for drawing
@@ -356,22 +358,22 @@ class Player:
     def move(self) -> int: # Returns the number of points earned
         if input_pressed(up_keys):
             if self.y -1 >= 0:
-                self.y -= 1
+                self.y -= self.speed
                 self.direction = 3
                 self.closestBed = self.computeClosestBed()
         if input_pressed(down_keys):
             if self.y + 1 < field_y - personStandFrontSprite.sheetH:
-                self.y += 1
+                self.y += self.speed
                 self.direction = 0
                 self.closestBed = self.computeClosestBed()
         if input_pressed(left_keys):
             if self.x - 1 >= 0:
-                self.x -= 1
+                self.x -= self.speed
                 self.direction = 1
                 self.closestBed = self.computeClosestBed()
         if input_pressed(right_keys):
             if self.x + 1 < field_x - personStandFrontSprite.sheetW:
-                self.x += 1
+                self.x += self.speed
                 self.direction = 2
                 self.closestBed = self.computeClosestBed()
         return self.closestBed.collect()
@@ -482,7 +484,8 @@ class App:
                 bed.drawFlyingCrow()
 
         # Draw the bottom bar
-
+        
+        pyxel.text(8,121,str(self.points),col=0)
 
 
 game = App()
