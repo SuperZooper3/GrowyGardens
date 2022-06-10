@@ -66,9 +66,19 @@ class PlantSprite:
             print("plantSpriteDrawError")
 
 
-playerSprite = Sprite(0, 0, 8, 16, 0)
-dryBedSprite = Sprite(8, 8, 8, 8)
-wetBedSprite = Sprite(8, 0, 8, 8)
+canIconSprite = Sprite(48,96,8,8)
+batIconSprite = Sprite(56,96,8,8)
+seedBagIconSprite = Sprite(48,104,8,8)
+coinIconSprite = Sprite(56,104,8,8)
+crowColourIconSprite = Sprite(32,168,8,8)
+crowGreyIconSprite = Sprite(40,168,8,8)
+clockFirstSprite = Sprite(48,112,16,8)
+clockSecondSprite = Sprite(48,120,16,8)
+clockThirdSprite = Sprite(48,128,16,8)
+clockFourthSprite = Sprite(48,136,16,8)
+
+
+crowSprite = Sprite(32,0,8,8)
 
 crowSprite = Sprite(32, 0, 8, 8)
 
@@ -295,7 +305,7 @@ class Crow:
 class App:
     def __init__(self):
         pyxel.init(128, 128, title="Nuit du c0de 2022")
-        pyxel.load("TestGraphics.pyxres")
+        pyxel.load("GrowyGardens.pyxres")
 
         self.player = Player()
 
