@@ -1,7 +1,7 @@
 import pyxel
 
 """
-Comment utilliser
+Comment utiliser
 ------
 README GOES HERE
 
@@ -72,14 +72,22 @@ class Player:
         self.playerSprite.draw(self.x,self.y)
 
 class Crow:
-    def __init__(self):
-        pass
+    def __init__(self, targetX, targetY):
+        self.movesToGo = 60 # frames
+        self.targetX = targetX
+        self.targetY = targetY
+        self.x, self.y = 0, 0
 
     def age(self) -> int:
         pass
 
     def move(self) -> None:
-        pass
+        if self.movesToGo < 2:
+            self.x = self.targetX
+            self.y = self.targetY
+        else:
+            self.x += (self.targetX-self.x)/self.movesToGo
+            self.y += (self.targetY-self.y)/self.movesToGo
 
     def draw(self) -> None:
         pass
