@@ -479,13 +479,13 @@ class App:
 
         # Draw the bottom bar
         coinIconSprite.draw(0,120)
-        pyxel.text(8,121,str(self.points),col=0)
-        canIconSprite.draw(40,120)
-        pyxel.text(48,121,str(1),col=0)
-        seedBagIconSprite.draw(56,120)
-        pyxel.text(64,121,str(2),col=0)
-        batIconSprite.draw(72,120)
-        pyxel.text(78,121,str(3),col=0)
+        pyxel.text(10,121,str(self.points),col=0)
+        canIconSprite.draw(42,120)
+        pyxel.text(50,121,str(1),col=0)
+        seedBagIconSprite.draw(58,120)
+        pyxel.text(66,121,str(2),col=0)
+        batIconSprite.draw(74,120)
+        pyxel.text(80,121,str(3),col=0)
 
 
 
