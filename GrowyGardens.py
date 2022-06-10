@@ -52,7 +52,7 @@ plantSprites = {
     "green": Sprite(16,0,8,8),
     "pink": Sprite(24,0,8,8),
     "blue": Sprite(16,8,8,8),
-    "orang": Sprite(24,8,8,8)
+    "orange": Sprite(24,8,8,8)
 }
 
 
