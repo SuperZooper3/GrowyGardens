@@ -34,7 +34,7 @@ class Player:
         self.speed = 1.5
         self.cooldown = 0
         self.direction = 0 # 0 down, 1 left, 2 right, 3 up, for sprite drawing
-        self.lastAction = # 0 water, 1 plant, 2 bonk, also for drawing
+        self.lastAction = 0 # 0 water, 1 plant, 2 bonk, also for drawing
 
     def move(self):
         if pyxel.btnp(up_key):
@@ -51,9 +51,7 @@ class Player:
             self.direction = 2
     
     def draw(self):
-
-
-    
+        pass
 
 class Crow:
     pass
