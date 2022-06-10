@@ -3,9 +3,13 @@ from random import randint
 from math import sqrt
 
 """
-Comment utiliser
-------
-README GOES HERE
+Bienvenue dans notre jardin en pleine croissance : Growy Gardens! L'objectif du jeu est de faire pousser 
+le plus de plantes possible en 3 minutes en les plantant rapidement et en assommant les corbeaux qui ont 
+faim! Vous pouvez suivre votre score en bas à gauche. Pour vous déplacer utilisez les touches WASD ou les 
+flèches. Vous pouvez effectuer trois actions : arroser une plante en appuyant sur la touche 1 ou J, planter 
+des graines en appuyant sur la touche 2 ou K, et assommer un corbeau avec la touche 3 ou L. Quand les bacs a 
+plantes sont sèches vous devez les arroser pour que votre plante puisse grandir. Une fois que la plante a grandi, 
+courrez dessus pour la prendre et regardez votre score augmenter. Bonne chance!
 
 """
 
@@ -34,7 +38,7 @@ bed_column_size = 5
 
 # Balance Variables
 game_duration = 180 * 30
-player_speed = 1.2
+player_speed = 2
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
@@ -473,9 +477,6 @@ class App:
             self.clockState=(((int(pyxel.frame_count-self.startFrame)/30)%60)//15)
 
 
-        self.points += self.player.move()
-        self.player.act()
-
     def draw(self) -> None:
         if not self.gameOver:
             pyxel.cls(3)
@@ -519,6 +520,7 @@ class App:
                 clockThirdSprite.draw(112,120)
             if self.clockState==3:
                 clockFourthSprite.draw(112,120)
+
         else:
             # Render game over screen
             pyxel.rect(20, 20, 88, 88, 0)
