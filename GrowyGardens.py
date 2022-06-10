@@ -83,12 +83,10 @@ canIconSprite = Sprite(48,96,8,8)
 batIconSprite = Sprite(56,96,8,8)
 seedBagIconSprite = Sprite(48,104,8,8)
 coinIconSprite = Sprite(56,104,8,8)
-crowColourIconSprite = Sprite(32,168,8,8,7)
-crowGreyIconSprite = Sprite(40,168,8,8,7)
-clockFirstSprite = Sprite(48,112,16,8)
-clockSecondSprite = Sprite(48,120,16,8)
-clockThirdSprite = Sprite(48,128,16,8)
-clockFourthSprite = Sprite(48,136,16,8)
+clockFirstSprite = Sprite(48,112,16,8,7)
+clockSecondSprite = Sprite(48,120,16,8,7)
+clockThirdSprite = Sprite(48,128,16,8,7)
+clockFourthSprite = Sprite(48,136,16,8,7)
 dryBedSprite = Sprite(32,128,16,16)
 wetBedSprite = Sprite(32,144,16,16)
 crowSprite = Sprite(0,160,16,16,7)
@@ -492,6 +490,8 @@ class App:
             clockThirdSprite.draw(112,120)
         if self.clockState==3:
             clockFourthSprite.draw(112,120)
+        
+        
 
 
 game = App()
