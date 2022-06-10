@@ -142,6 +142,7 @@ class Bed:
         self.timeUntilCrow = 0
         self.crow = None
         self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
+        self.centerCoords = (self.x + (dryBedSprite.sheetW - self.x) / 2, self.y + (dryBedSprite.sheetH - self.y) / 2)
 
     def draw(self) -> None:
         if self.isWatered:
@@ -210,13 +211,15 @@ class Bed:
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, bedList):
         self.x = 0
         self.y = 0
         self.speed = 1.5
         self.cooldown = 0
         self.direction = 0  # 0 down, 1 left, 2 right, 3 up, for sprite drawing
         self.lastAction = 0  # 0 water, 1 plant, 2 bonk, also for drawing
+        self.bedList = bedList
+        self.closestBed = self.computeClosestBed()
 
     def move(self) -> None:
         if input_pressed(up_keys):
@@ -235,6 +238,10 @@ class Player:
             if self.x + 1 < field_x - personStandFrontSprite.sheetW:
                 self.x += 1
                 self.direction = 2
+
+    def computeClosestBed(self) -> Bed:
+        centerCoords = (self.x + personStandFrontSprite.sheetW / 2, self.y + personStandFrontSprite.sheetH / 2)
+
 
     def draw(self) -> None:
         personStandFrontSprite.draw(self.x, self.y)
@@ -322,8 +329,8 @@ class App:
     def __init__(self):
         pyxel.init(128, 128, title="Nuit du c0de 2022")
         pyxel.load("GrowyGardens.pyxres")
-
-        self.player = Player()
+        self.bedList = [] # List of Lists
+        self.player = Player(self.bedList)
 
         self.testBed = Bed(80, 80)
 
