@@ -31,8 +31,6 @@ max_plant_dry = 15 * 30
 crow_chance = 0.5
 
 class Sprite:
-    pass
-
     def __init__(self, sheetX, sheetY, sheetW, sheetH, colourKey = 0):
         self.sheetX = sheetX
         self.sheetY = sheetY
@@ -59,8 +57,6 @@ plantSprites = {
 
 
 class Bed:
-    pass
-
     def __init__(self,x,y):
         self.x = x
         self.y = y
@@ -96,8 +92,6 @@ class Bed:
         
 
 class Player:
-    pass
-
     def __init__(self):
         self.x = 0
         self.y = 0
