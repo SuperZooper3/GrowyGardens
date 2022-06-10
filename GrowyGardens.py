@@ -487,7 +487,7 @@ class App:
             pyxel.cls(3)
             pyxel.bltm(0,0,0,0,0,128,128)
             pyxel.rect(20, 20, 88, 88, 0)
-            pyxel.text(43, 24, "GROWYGARDENS", 10)
+            pyxel.text(43, 24, "GrowyGardens", 10)
             pyxel.text(24, 42, "Bienvenue dans le\njeu GrowyGardens.\nRecoltez le plus de \nplantes possibles\nen 3 minutes.", 7)
             pyxel.text(24, 86, "Appuyez sur 1 pour\njouer.", 7)
         elif not self.gameOver and self.gameStarted:
