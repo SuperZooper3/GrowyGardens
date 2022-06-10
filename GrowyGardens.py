@@ -90,9 +90,9 @@ personStandFrontSprite = Sprite(32,0,16,30)
 personStandBackSprite = Sprite(48,0,16,30)
 personLeftSprite = Sprite(48,32,16,30)
 personRightSprite = Sprite(32,32,16,30)
-personBatSprite = Sprite(32,64,16,30)
+personBonkSprite = Sprite(32,64,16,30)
 personWaterSprite = Sprite(48,64,16,30)
-personSeedSprite = Sprite(32,96,16,30)
+personPlantSprite = Sprite(32,96,16,30)
 
 plantNames = ["pinkFlower", "blueFlower", "yellowFlower", "tomato","blueberry","lettuce","carrot","mushroom"]
 
@@ -372,7 +372,23 @@ class Player:
         print("act",self.lastAction,self.cooldown)
 
     def draw(self) -> None:
-        personStandFrontSprite.draw(self.x, self.y)
+        if self.cooldown > 0:
+            if self.lastAction == 0:
+                personWaterSprite.draw(self.x, self.y)
+            elif self.lastAction == 1:
+                personPlantSprite.draw(self.x, self.y)
+            elif self.lastAction == 2:
+                personBonkSprite.draw(self.x, self.y)
+        else:
+            if self.direction == 0:
+                personStandFrontSprite.draw(self.x, self.y)
+            elif self.direction == 3:
+                personStandBackSprite.draw(self.x, self.y)
+            elif self.direction == 1:
+                personLeftSprite.draw(self.x, self.y)
+            elif self.direction == 2:
+                personRightSprite.draw(self.x, self.y)
+                
 
 
 class App:
