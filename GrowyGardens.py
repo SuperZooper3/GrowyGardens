@@ -429,15 +429,8 @@ class App:
             for bed in row:
                 bed.age()
         
-        clockState=(((int(pyxel.frame_count-self.startFrame)/30)%60)//15)
-        if clockState==0:
-            clockFirstSprite.draw(112,120)
-        if clockState==1:
-            clockSecondSprite.draw(112,120)
-        if clockState==2:
-            clockThirdSprite.draw(112,120)
-        if clockState==3:
-            clockFourthSprite.draw(112,120)
+        self.clockState=(((int(pyxel.frame_count-self.startFrame)/30)%60)//15)
+
 
         self.player.move()
         self.player.act()
@@ -459,6 +452,17 @@ class App:
         for row in self.bedList:
             for bed in row:
                 bed.drawFlyingCrow()
+
+
+        # Draw bar
+        if self.clockState==0:
+            clockFirstSprite.draw(112,120)
+        if self.clockState==1:
+            clockSecondSprite.draw(112,120)
+        if self.clockState==2:
+            clockThirdSprite.draw(112,120)
+        if self.clockState==3:
+            clockFourthSprite.draw(112,120)
 
 
 game = App()
