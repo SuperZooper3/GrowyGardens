@@ -32,7 +32,7 @@ crow_eat_time = 10 * 30
 crow_chance = 0.5
 
 class Sprite:
-    def __init__(self, sheetX, sheetY, sheetW, sheetH, colourKey = 0):
+    def __init__(self, sheetX: int, sheetY: int, sheetW: int, sheetH: int, colourKey: int = 0):
         self.sheetX = sheetX
         self.sheetY = sheetY
         self.sheetW = sheetW
@@ -40,7 +40,7 @@ class Sprite:
         self.colKey = colourKey
         self.sheet = 0
 
-    def draw(self,x,y):
+    def draw(self, x: int, y: int) -> None:
         pyxel.blt(x ,y , self.sheet, self.sheetX, self.sheetY, self.sheetW,self.sheetH, self.colKey)
 
 class PlantSprite:
@@ -91,7 +91,7 @@ plantSprites = {
 }
 
 class Bed:
-    def __init__(self,x,y):
+    def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
         self.isDead = False
@@ -105,7 +105,7 @@ class Bed:
         self.crow = False # False means crow hasn't spawned yet, True means crow has spawned and is now gone, and if it's a crow object then the crow is on the scene
         self.state = 0 # n = 0 for seed, n = 1 for sprout, n = 2 for grown
     
-    def draw(self):
+    def draw(self) -> None:
         if self.isWatered:
             wetBedSprite.draw(self.x, self.y)
         else:
@@ -114,7 +114,7 @@ class Bed:
             sprite = plantSprites[self.plantType]
             sprite.draw(self.x,self.y,self.state)
     
-    def drawCrow(self):
+    def drawCrow(self) -> None:
         if type(self.crow) == Crow:
             self.crow.draw()
     
@@ -122,7 +122,7 @@ class Bed:
         self.waterLeft = randint(min_plant_dry,max_plant_dry)
         self.isWatered = True
 
-    def plant(self):
+    def plant(self) -> None:
         type = plantNames[randint(0,len(plantNames)-1)]
         self.isPopulated = True
         self.plantType = type
@@ -178,7 +178,7 @@ class Player:
         self.direction = 0 # 0 down, 1 left, 2 right, 3 up, for sprite drawing
         self.lastAction = 0 # 0 water, 1 plant, 2 bonk, also for drawing
 
-    def move(self):
+    def move(self) -> None:
         if pyxel.btn(up_key):
             self.y -= 1
             self.direction = 3
@@ -192,7 +192,7 @@ class Player:
             self.x += 1
             self.direction = 2
     
-    def draw(self):
+    def draw(self) -> None:
         playerSprite.draw(self.x,self.y)
 
 class Crow:
@@ -200,21 +200,45 @@ class Crow:
         self.movesToGo = 60 # frames
         self.targetX = targetX
         self.targetY = targetY
-        self.x, self.y = 0, 0
         self.arrived = False
         self.onWayBack = False
         self.clock = crow_eat_time
         self.atePlant = False
+        edge = randint(0, 3) # 0 bottom, 1 left, 2 top, 3 right
+        if edge == 0:
+            self.x = randint(0, 127)
+            self.y = 127
+        elif edge == 1:
+            self.x = 0
+            self.y = randint(0, 127)
+        elif edge == 2:
+            self.x = randint(0, 127)
+            self.y = 0
+        elif edge == 3:
+            self.x = 127
+            self.y = randint(0, 127)
 
     def update(self) -> None:
         if self.arrived:
             self.clock -= 1
             if self.clock == 0:
                 self.movesToGo = 60 # frames
-                self.targetX, self.targetY = 0, 0
                 self.onWayBack = True
                 self.arrived = False
                 self.atePlant = True
+                edge = randint(0, 3) # 0 bottom, 1 left, 2 top, 3 right
+                if edge == 0:
+                    self.targetX = randint(0, 127)
+                    self.targetY = 127
+                elif edge == 1:
+                    self.targetX = 0
+                    self.targetY = randint(0, 127)
+                elif edge == 2:
+                    self.targetX = randint(0, 127)
+                    self.targetY = 0
+                elif edge == 3:
+                    self.targetX = 127
+                    self.targetY = randint(0, 127)
 
         # Movement
         if not self.arrived:
@@ -229,9 +253,21 @@ class Crow:
 
     def shoo(self) -> None:
         self.movesToGo = 15 # frames
-        self.targetX, self.targetY = 0, 0
         self.onWayBack = True
         self.arrived = False
+        edge = randint(0, 3) # 0 bottom, 1 left, 2 top, 3 right
+        if edge == 0:
+            self.targetX = randint(0, 127)
+            self.targetY = 127
+        elif edge == 1:
+            self.targetX = 0
+            self.targetY = randint(0, 127)
+        elif edge == 2:
+            self.targetX = randint(0, 127)
+            self.targetY = 0
+        elif edge == 3:
+            self.targetX = 127
+            self.targetY = randint(0, 127)
 
     def draw(self) -> None:
         crowSprite.draw(self.x, self.y)
