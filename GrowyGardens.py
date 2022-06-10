@@ -18,8 +18,8 @@ plant_key = pyxel.KEY_2
 bonk_key = pyxel.KEY_3
 
 
-feild_x = 128
-feild_y = 120
+field_x = 128
+field_y = 120
 
 class Sprite:
     pass
@@ -40,10 +40,6 @@ class Bed:
     pass
 
 class Player:
-    pass
-
-    
-
     def __init__(self):
         self.x = 0
         self.y = 0
@@ -72,22 +68,30 @@ class Player:
         self.playerSprite.draw(self.x,self.y)
 
 class Crow:
-    def __init__(self, targetX, targetY):
+    def __init__(self, targetX: int, targetY: int, killTime: int):
         self.movesToGo = 60 # frames
         self.targetX = targetX
         self.targetY = targetY
         self.x, self.y = 0, 0
+        self.arrived = False
+        self.onWayBack = False
+        self.clock = killTime
 
-    def age(self) -> int:
-        pass
-
-    def move(self) -> None:
-        if self.movesToGo < 2:
+    def update(self) -> None:
+        # Movement
+        if self.movesToGo == 1:
             self.x = self.targetX
             self.y = self.targetY
+            self.arrived = True
         else:
             self.x += (self.targetX-self.x)/self.movesToGo
             self.y += (self.targetY-self.y)/self.movesToGo
+
+    def shoo(self) -> None:
+        self.movesToGo = 15 # frames
+        self.targetX, self.targetY = 0, 0
+        self.onWayBack = True
+        self.arrived = False
 
     def draw(self) -> None:
         pass
