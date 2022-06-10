@@ -80,45 +80,69 @@ dryPotagerSprite = Sprite(32,128,16,16)
 wetPotagerSprite = Sprite(32,144,16,16)
 crowSprite = Sprite(0,160,16,16,7)
 crowFlySprite = Sprite(16,160,16,16,7)
-personStandFrontSprite = Sprite(32,0,16,32)
-personStandBackSprite = Sprite(48,0,16,32)
-personLeftSprite = Sprite(48,32,16,32)
-personRightSprite = Sprite(32,32,16,32)
-personBatSprite = Sprite(32,64,16,32)
-personWaterSprite = Sprite(48,64,16,32)
-personSeedSprite = Sprtie(32,96,16,32)
+personStandFrontSprite = Sprite(32,0,16,30)
+personStandBackSprite = Sprite(48,0,16,30)
+personLeftSprite = Sprite(48,32,16,30)
+personRightSprite = Sprite(32,32,16,30)
+personBatSprite = Sprite(32,64,16,30)
+personWaterSprite = Sprite(48,64,16,30)
+personSeedSprite = Sprtie(32,96,16,30)
 
 
 crowSprite = Sprite(32,0,8,8)
 
 crowSprite = Sprite(32, 0, 8, 8)
 
-plantNames = ["green", "pink", "blue", "orang"]
+plantNames = ["pinkFlower", "blueFlower", "yellowFlower", "tomato","blueberry","lettuce","carrot","mushroom"]
 
 plantSprites = {
-    "green": PlantSprite(
-        Sprite(16, 16, 8, 8),
-        Sprite(16, 32, 8, 8),
-        Sprite(16, 0, 8, 8),
-        Sprite(40,0,8,8),
+    "pinkFlower": PlantSprite(
+        Sprite(16, 0, 16, 16),
+        Sprite(0, 144, 16, 16),
+        Sprite(0, 0, 16, 16),
+        Sprite(16,144,16,16),
     ),
-    "pink": PlantSprite(
-        Sprite(24, 16, 8, 8),
-        Sprite(24, 32, 8, 8),
-        Sprite(24, 0, 8, 8),
-        Sprite(40,0,8,8),
+    "blueFlower": PlantSprite(
+        Sprite(16, 16, 16, 16),
+        Sprite(0, 144, 16, 16),
+        Sprite(0, 16, 16, 16),
+        Sprite(16,144,16,16),
     ),
-    "blue": PlantSprite(
-        Sprite(16, 24, 8, 8),
-        Sprite(16, 40, 8, 8),
-        Sprite(16, 32, 8, 8),
-        Sprite(40,0,8,8),
+    "yellowFlower": PlantSprite(
+        Sprite(16, 32, 16, 16),
+        Sprite(0, 144, 16, 16),
+        Sprite(0, 32, 16, 16),
+        Sprite(16,144,16,16),
     ),
-    "orang": PlantSprite(
-        Sprite(24, 24, 8, 8),
-        Sprite(24, 40, 8, 8),
-        Sprite(24, 32, 8, 8),
-        Sprite(40,0,8,8),
+    "tomato": PlantSprite(
+        Sprite(16, 48, 16, 16),
+        Sprite(0, 144, 16, 16),
+        Sprite(0, 48, 16, 16),
+        Sprite(16,144,16,16),
+    ),
+    "blueberry": PlantSprite(
+        Sprite(16, 64, 16, 16),
+        Sprite(0, 144, 16, 16),
+        Sprite(0, 64, 16, 16),
+        Sprite(16,144,16,16),
+    ),
+    "lettuce": PlantSprite(
+        Sprite(16, 80, 16, 16),
+        Sprite(0, 144, 16, 16),
+        Sprite(0, 80, 16, 16),
+        Sprite(16,144,16,16),
+    ),
+    "carrot": PlantSprite(
+        Sprite(16, 96, 16, 16),
+        Sprite(0, 144, 16, 16),
+        Sprite(0, 96, 16, 16),
+        Sprite(16,144,16,16),
+    ),
+    "mushroom": PlantSprite(
+        Sprite(16, 112, 16, 16),
+        Sprite(0, 144, 16, 16),
+        Sprite(0, 112, 16, 16),
+        Sprite(16,144,16,16),
     ),
 }
 
