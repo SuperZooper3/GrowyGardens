@@ -320,10 +320,11 @@ class Player:
 
     def act(self) -> None:
         if input_pressed(water_keys):
-
+            self.closestBed.water()
         elif input_pressed(plant_keys):
-
-        elif input_pressed(bonk_keys)
+            self.closestBed.plant()
+        elif input_pressed(bonk_keys):
+            self.closestBed.bonk()
 
     def draw(self) -> None:
         personStandFrontSprite.draw(self.x, self.y)
