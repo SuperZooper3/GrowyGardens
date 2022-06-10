@@ -26,12 +26,18 @@ def input_pressed(key_list):
 
 field_x = 128
 field_y = 120
+bottom_bar_height = 8
+path_size = 8
+bed_row_size = 5
+bed_column_size = 5
 
 # Balance Variables
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
 max_plant_dry = 15 * 30
+min_plant_age = 10 * 30
+max_plant_age = 20 * 30
 crow_eat_time = 10 * 30
 crow_chance = 0.5
 actionCooldown = 1 * 30
@@ -159,15 +165,15 @@ class Crow:
         edge = randint(0, 3)  # 0 bottom, 1 left, 2 top, 3 right
         if edge == 0:
             self.x = randint(0, 127)
-            self.y = 127
+            self.y = 127 + crowSprite.sheetH
         elif edge == 1:
-            self.x = 0
+            self.x = 0 - crowSprite.sheetW
             self.y = randint(0, 127)
         elif edge == 2:
             self.x = randint(0, 127)
-            self.y = 0
+            self.y = 0 - crowSprite.sheetH
         elif edge == 3:
-            self.x = 127
+            self.x = 127 + crowSprite.sheetW
             self.y = randint(0, 127)
 
     def update(self) -> None:
@@ -181,15 +187,15 @@ class Crow:
                 edge = randint(0, 3)  # 0 bottom, 1 left, 2 top, 3 right
                 if edge == 0:
                     self.targetX = randint(0, 127)
-                    self.targetY = 127
+                    self.targetY = 127 + crowSprite.sheetH
                 elif edge == 1:
-                    self.targetX = 0
+                    self.targetX = 0 - crowSprite.sheetW
                     self.targetY = randint(0, 127)
                 elif edge == 2:
                     self.targetX = randint(0, 127)
-                    self.targetY = 0
+                    self.targetY = 0 - crowSprite.sheetH
                 elif edge == 3:
-                    self.targetX = 127
+                    self.targetX = 127 + crowSprite.sheetW
                     self.targetY = randint(0, 127)
 
         # Movement
@@ -211,15 +217,15 @@ class Crow:
             edge = randint(0, 3)  # 0 bottom, 1 left, 2 top, 3 right
             if edge == 0:
                 self.targetX = randint(0, 127)
-                self.targetY = 127
+                self.targetY = 127 + crowSprite.sheetH
             elif edge == 1:
-                self.targetX = 0
+                self.targetX = 0 - crowSprite.sheetW
                 self.targetY = randint(0, 127)
             elif edge == 2:
                 self.targetX = randint(0, 127)
-                self.targetY = 0
+                self.targetY = 0 - crowSprite.sheetH
             elif edge == 3:
-                self.targetX = 127
+                self.targetX = 127 + crowSprite.sheetW
                 self.targetY = randint(0, 127)
 
     def draw(self) -> None:
@@ -239,7 +245,7 @@ class Bed:
         self.plantAge = 0
         self.maturityAge = 0
         self.waterLeft = 0
-        self.timeUntilCrow = 0
+        self.timeUntilCrow = 1
         self.crow = None
         self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
         self.centerCoords = (self.x + (dryBedSprite.sheetW - self.x) / 2, self.y + (dryBedSprite.sheetH - self.y) / 2)
@@ -253,8 +259,12 @@ class Bed:
             sprite = plantSprites[self.plantType]
             sprite.draw(self.x, self.y, self.state)
 
-    def drawCrow(self) -> None:
-        if type(self.crow) == Crow:
+    def drawLandedCrow(self) -> None:
+        if type(self.crow) == Crow and self.crow.arrived:
+            self.crow.draw()
+    
+    def drawFlyingCrow(self) -> None:
+        if type(self.crow) == Crow and not self.crow.arrived:
             self.crow.draw()
 
     def water(self) -> None:
@@ -267,7 +277,8 @@ class Bed:
         self.plantType = type
         self.plantAge = 0
         self.maturityAge = randint(min_plant_age, max_plant_age)
-        self.timeUntilCrow = randint(30, self.maturityAge * (1/crow_chance))
+        if self.timeUntilCrow > 0:
+            self.timeUntilCrow = randint(30, self.maturityAge * (1/crow_chance))
 
     def bonk(self) -> None:
         if type(self.crow) == Crow:
@@ -293,6 +304,7 @@ class Bed:
             self.crow.update()
             if self.crow.atePlant == True:
                 self.isDead = True
+                self.isPopulated = False
             if self.crow.arrived and self.crow.onWayBack:
                 self.crow = True  # Crow is gone
 
@@ -393,18 +405,26 @@ class Player:
 
 class App:
     def __init__(self):
-        pyxel.init(128, 128, title="Nuit du c0de 2022")
+        pyxel.init(field_x, field_y + bottom_bar_height, title="Nuit du c0de 2022")
         pyxel.load("GrowyGardens.pyxres")
         self.startFrame = 0
-
-        self.testBed = Bed(80, 80)
-
-        self.bedList = [[self.testBed]] # List of Lists
+        self.bedList = [
+            [
+                Bed(
+                    (x+1) * path_size + x * dryBedSprite.sheetW,
+                    (y+1) * path_size + y * dryBedSprite.sheetH
+                ) for x in range(bed_row_size)
+            ] for y in range(bed_column_size)
+        ]
         self.player = Player(self.bedList)
 
         pyxel.run(self.update, self.draw)
 
     def update(self) -> None:
+        for row in self.bedList:
+            for bed in row:
+                bed.age()
+        
         clockState=int((((frame_count-self.startFrame)/30)%60)//15)
         if clockState==0:
             clockFirstSprite.draw(112,120)
@@ -415,31 +435,26 @@ class App:
         if clockState==3:
             clockFourthSprite.draw(112,120)
 
-
-
         self.player.move()
-        self.testBed.age()
         self.player.act()
-
-        # Testing code
-        if pyxel.btnp(pyxel.KEY_O):
-            self.testBed.plant()
-            # print(self.testBed.timeUntilCrow)
-            self.testBed.timeUntilCrow = 30
-
-        if pyxel.btnp(pyxel.KEY_U):
-            self.testBed.water()
 
     def draw(self) -> None:
         pyxel.cls(3)
         pyxel.bltm(0,0,0,0,0,128,128) # draw the tilemap
 
-        self.testBed.draw()
+        for row in self.bedList:
+            for bed in row:
+                bed.draw()
+
+        for row in self.bedList:
+            for bed in row:
+                bed.drawLandedCrow()
 
         self.player.draw()
-        self.testBed.drawCrow()
-    
 
+        for row in self.bedList:
+            for bed in row:
+                bed.drawFlyingCrow()
 
 
 game = App()
