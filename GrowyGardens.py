@@ -106,31 +106,31 @@ plantPoints = {"pinkFlower": 30, "blueFlower": 10, "yellowFlower": 15, "tomato":
 plantSprites = {
     "pinkFlower": PlantSprite(
         Sprite(16, 0, 16, 16),
-        Sprite(0, 144, 16, 16),
+        Sprite(0, 176, 16, 16),
         Sprite(0, 0, 16, 16),
         Sprite(16,144,16,16),
     ),
     "blueFlower": PlantSprite(
         Sprite(16, 16, 16, 16),
-        Sprite(0, 144, 16, 16),
+        Sprite(16, 176, 16, 16),
         Sprite(0, 16, 16, 16),
         Sprite(16,144,16,16),
     ),
     "yellowFlower": PlantSprite(
         Sprite(16, 32, 16, 16),
-        Sprite(0, 144, 16, 16),
+        Sprite(32, 176, 16, 16),
         Sprite(0, 32, 16, 16),
         Sprite(16,144,16,16),
     ),
     "tomato": PlantSprite(
         Sprite(16, 48, 16, 16),
-        Sprite(0, 144, 16, 16),
+        Sprite(16, 192, 16, 16),
         Sprite(0, 48, 16, 16),
         Sprite(16,144,16,16),
     ),
     "blueberry": PlantSprite(
         Sprite(16, 64, 16, 16),
-        Sprite(0, 144, 16, 16),
+        Sprite(32, 192, 16, 16),
         Sprite(0, 64, 16, 16),
         Sprite(16,144,16,16),
     ),
@@ -148,7 +148,7 @@ plantSprites = {
     ),
     "mushroom": PlantSprite(
         Sprite(16, 112, 16, 16),
-        Sprite(0, 144, 16, 16),
+        Sprite(0, 192, 16, 16),
         Sprite(0, 112, 16, 16),
         Sprite(16,144,16,16),
     ),
