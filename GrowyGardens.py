@@ -407,6 +407,7 @@ class App:
     def __init__(self):
         pyxel.init(field_x, field_y + bottom_bar_height, title="Nuit du c0de 2022")
         pyxel.load("GrowyGardens.pyxres")
+        self.startFrame = 0
         self.bedList = [
             [
                 Bed(
@@ -423,6 +424,18 @@ class App:
         for row in self.bedList:
             for bed in row:
                 bed.age()
+        clockState=int()
+        if clockState==0:
+            pass #draw clockFirstSprite
+        if clockState==1:
+            pass #draw clockSecondSprite 
+        if clockState==2:
+            pass #draw clockThirdSprite
+        if clockState==3:
+            pass #draw clockFourthSprite
+
+
+
         self.player.move()
         self.player.act()
 
