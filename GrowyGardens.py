@@ -1,5 +1,6 @@
 import pyxel
 from random import randint
+from math import sqrt
 
 """
 Comment utiliser
@@ -101,7 +102,7 @@ personWaterSprite = Sprite(48,64,16,30)
 personPlantSprite = Sprite(32,96,16,30)
 
 plantNames = ["pinkFlower", "blueFlower", "yellowFlower", "tomato","blueberry","lettuce","carrot","mushroom"]
-plantPoints = {"pinkFlower": 30, "blueFlower": 10, "yellowFlower": 15, "tomato":5, "lettuce":5, "carrot":10,"blueFlower":15,"mushroom":25}
+plantPoints = {"pinkFlower": 30, "blueFlower": 10, "yellowFlower": 15, "tomato":5, "lettuce":5, "carrot":10,"blueberry":15,"mushroom":25}
 
 plantSprites = {
     "pinkFlower": PlantSprite(
@@ -248,8 +249,8 @@ class Bed:
         self.waterLeft = 0
         self.timeUntilCrow = 1
         self.crow = None
-        self.state = -1  # n = 0 for seed, n = 1 for sprout, n = 2 for grown, -1 for nothing
-        self.centerCoords = (self.x + (dryBedSprite.sheetW - self.x) / 2, self.y + (dryBedSprite.sheetH - self.y) / 2)
+        self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
+        self.centerCoords = (self.x + dryBedSprite.sheetW / 2, self.y + dryBedSprite.sheetH / 2)
 
     def draw(self) -> None:
         if self.isWatered:
@@ -349,7 +350,7 @@ class Player:
         self.centerCoords = (self.x + personStandFrontSprite.sheetW / 2, self.y + personStandFrontSprite.sheetH / 2)
         self.closestBed = self.computeClosestBed()
 
-    def move(self) -> None:
+    def move(self) -> int: # Returns the number of points earned
         if input_pressed(up_keys):
             if self.y -1 >= 0:
                 self.y -= 1
@@ -370,15 +371,18 @@ class Player:
                 self.x += 1
                 self.direction = 2
                 self.closestBed = self.computeClosestBed()
-        self.closestBed.collect()
+        return self.closestBed.collect()
 
     def computeClosestBed(self) -> Bed:
+        self.centerCoords = (self.x + personStandFrontSprite.sheetW / 2, self.y + personStandFrontSprite.sheetH / 2)
         closest = self.bedList[0][0]
-        closestDist = abs(closest.centerCoords[0] - self.centerCoords[0]) + abs(closest.centerCoords[1] - self.centerCoords[1])
+        closestDist = sqrt((closest.centerCoords[0] - self.centerCoords[0])**2 + (closest.centerCoords[1] - self.centerCoords[1])**2)
         for y, row in enumerate(self.bedList):
             for x, bed in enumerate(row):
-                if (abs(bed.centerCoords[0] - self.centerCoords[0]) + abs(bed.centerCoords[1] - self.centerCoords[1])) < closestDist:
+                dist = sqrt((bed.centerCoords[0] - self.centerCoords[0])**2 + (bed.centerCoords[1] - self.centerCoords[1])**2)
+                if dist < closestDist:
                     closest = self.bedList[y][x]
+                    closestDist = dist
         return closest
 
     def act(self) -> None:
@@ -423,6 +427,8 @@ class App:
         pyxel.init(field_x, field_y + bottom_bar_height, title="Nuit du c0de 2022")
         pyxel.load("GrowyGardens.pyxres")
         self.startFrame = 0
+        self.points = 0
+
         self.bedList = [
             [
                 Bed(
@@ -433,23 +439,25 @@ class App:
         ]
         self.player = Player(self.bedList)
 
+
         pyxel.run(self.update, self.draw)
 
     def update(self) -> None:
         for row in self.bedList:
             for bed in row:
                 bed.age()
-        clockState=int()
+        
+        clockState=int((((pyxel.frame_count-self.startFrame)/30)%60)//15)
         if clockState==0:
-            pass #draw clockFirstSprite
+            clockFirstSprite.draw(112,120)
         if clockState==1:
-            pass #draw clockSecondSprite 
+            clockSecondSprite.draw(112,120)
         if clockState==2:
-            pass #draw clockThirdSprite
+            clockThirdSprite.draw(112,120)
         if clockState==3:
-            pass #draw clockFourthSprite
+            clockFourthSprite.draw(112,120)
 
-        self.player.move()
+        self.points += self.player.move()
         self.player.act()
 
     def draw(self) -> None:
