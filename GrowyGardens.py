@@ -405,15 +405,15 @@ class App:
         pyxel.run(self.update, self.draw)
 
     def update(self) -> None:
-        clockState=int()
+        clockState=int((((frame_count-self.startFrame)/30)%60)//15)
         if clockState==0:
-            #draw clockFirstSprite
+            clockFirstSprite.draw(112,120)
         if clockState==1:
-            #draw clockSecondSprite 
+            clockSecondSprite.draw(112,120)
         if clockState==2:
-            #draw clockThirdSprite
+            clockThirdSprite.draw(112,120)
         if clockState==3:
-            #draw clockFourthSprite
+            clockFourthSprite.draw(112,120)
 
 
 
