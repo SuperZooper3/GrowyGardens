@@ -54,12 +54,23 @@ class Player:
         pass
 
 class Crow:
-    pass
+    def __init__(self):
+        pass
+
+    def age(self) -> int:
+        pass
+
+    def move(self) -> None:
+        pass
+
+    def draw(self) -> None:
+        pass
 
 class App:
     def __init__(self):
         pyxel.init(128, 128, title="Nuit du c0de 2022")
         pyxel.run(self.update, self.draw)
+        player = Player()
     
     def update(self) -> None:
         pass
