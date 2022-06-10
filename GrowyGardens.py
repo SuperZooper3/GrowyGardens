@@ -3,9 +3,13 @@ from random import randint
 from math import sqrt
 
 """
-Comment utiliser
-------
-README GOES HERE
+Bienvenue dans notre jardin en pleine croissance : Growy Gardens! L'objectif du jeu est de faire pousser 
+le plus de plantes possible en 3 minutes en les plantant rapidement et en assommant les corbeaux qui ont 
+faim! Vous pouvez suivre votre score en bas à gauche. Pour vous déplacer utilisez les touches WASD ou les 
+flèches. Vous pouvez effectuer trois actions : arroser une plante en appuyant sur la touche 1 ou J, planter 
+des graines en appuyant sur la touche 2 ou K, et assommer un corbeau avec la touche 3 ou L. Quand les bacs a 
+plantes sont sèches vous devez les arroser pour que votre plante puisse grandir. Une fois que la plante a grandi, 
+courrez dessus pour la prendre et regardez votre score augmenter. Bonne chance!
 
 """
 
