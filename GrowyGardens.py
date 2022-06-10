@@ -379,6 +379,7 @@ class App:
     def __init__(self):
         pyxel.init(128, 128, title="Nuit du c0de 2022")
         pyxel.load("GrowyGardens.pyxres")
+        self.startFrame = 0
 
         self.testBed = Bed(80, 80)
 
@@ -388,6 +389,18 @@ class App:
         pyxel.run(self.update, self.draw)
 
     def update(self) -> None:
+        clockState=int()
+        if clockState==0:
+            #draw clockFirstSprite
+        if clockState==1:
+            #draw clockSecondSprite 
+        if clockState==2:
+            #draw clockThirdSprite
+        if clockState==3:
+            #draw clockFourthSprite
+
+
+
         self.player.move()
         self.testBed.age()
         self.player.act()
@@ -409,6 +422,8 @@ class App:
 
         self.player.draw()
         self.testBed.drawCrow()
+    
+
 
 
 game = App()
