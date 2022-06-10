@@ -31,8 +31,6 @@ max_plant_dry = 15 * 30
 crow_chance = 0.5
 
 class Sprite:
-    pass
-
     def __init__(self, sheetX, sheetY, sheetW, sheetH, colourKey = 0):
         self.sheetX = sheetX
         self.sheetY = sheetY
@@ -48,7 +46,7 @@ playerSprite = Sprite(0,0,8,16,0)
 dryBedSprite = Sprite(8,8,8,8)
 wetBedSprite = Sprite(8,0,8,8)
 
-plantNames = ["green","pink","blue","orang"]
+plantNames = ["green","pink","blue","orange"]
 
 plantSprites = {
     "green": Sprite(16,0,8,8),
@@ -59,8 +57,6 @@ plantSprites = {
 }
 
 class Bed:
-    pass
-
     def __init__(self,x,y):
         self.x = x
         self.y = y
@@ -79,6 +75,10 @@ class Bed:
         else:
             dryBedSprite.draw(self.x, self.y)
         plantSprites[self.plantType].draw(self.x,self.y)
+    
+    def water(self) -> None:
+        self.waterLeft = randint(min_plant_dry,max_plant_dry)
+        self.isWatered = True
 
     def plant(self):
         type = plantNames[randint(0,len(plantNames)-1)]
@@ -98,8 +98,6 @@ class Bed:
         
 
 class Player:
-    pass
-
     def __init__(self):
         self.x = 0
         self.y = 0
@@ -136,14 +134,24 @@ class Crow:
         self.clock = killTime
 
     def update(self) -> None:
+        if self.arrived:
+            self.clock -= 1
+            if self.clock == 0:
+                self.movesToGo = 30 # frames
+                self.targetX, self.targetY = 0, 0
+                self.onWayBack = True
+                self.arrived = False
+
         # Movement
-        if self.movesToGo == 1:
-            self.x = self.targetX
-            self.y = self.targetY
-            self.arrived = True
-        else:
-            self.x += (self.targetX-self.x)/self.movesToGo
-            self.y += (self.targetY-self.y)/self.movesToGo
+        if not self.arrived:
+            if self.movesToGo == 1:
+                self.x = self.targetX
+                self.y = self.targetY
+                self.arrived = True
+            else:
+                self.x += (self.targetX-self.x)/self.movesToGo
+                self.y += (self.targetY-self.y)/self.movesToGo
+            self.movesToGo -= 1
 
     def shoo(self) -> None:
         self.movesToGo = 15 # frames
