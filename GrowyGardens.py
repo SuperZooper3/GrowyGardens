@@ -320,27 +320,38 @@ class Player:
         self.lastAction = 0  # 0 water, 1 plant, 2 bonk, also for drawing
         self.bedList = bedList
         self.closestBed = self.computeClosestBed()
+        centerCoords = (self.x + personStandFrontSprite.sheetW / 2, self.y + personStandFrontSprite.sheetH / 2)
 
     def move(self) -> None:
         if input_pressed(up_keys):
             if self.y -1 >= 0:
                 self.y -= 1
                 self.direction = 3
+                self.closestBed = self.computeClosestBed()
         if input_pressed(down_keys):
             if self.y + 1 < field_y - personStandFrontSprite.sheetH:
                 self.y += 1
                 self.direction = 0
+                self.closestBed = self.computeClosestBed()
         if input_pressed(left_keys):
             if self.x - 1 >= 0:
                 self.x -= 1
                 self.direction = 1
+                self.closestBed = self.computeClosestBed()
         if input_pressed(right_keys):
             if self.x + 1 < field_x - personStandFrontSprite.sheetW:
                 self.x += 1
                 self.direction = 2
+                self.closestBed = self.computeClosestBed()
 
     def computeClosestBed(self) -> Bed:
-        centerCoords = (self.x + personStandFrontSprite.sheetW / 2, self.y + personStandFrontSprite.sheetH / 2)
+        closest = self.bedList[0][0]
+        closestDist = abs(closest.centerCoords[0] - self.centerCoords[0]) + abs(closest.centerCoords[1] - self.centerCoords[1])
+        for y, row in enumerate(self.bedList):
+            for x, bed in enumerate(row):
+                if (abs(bed.centerCoords[0] - self.centerCoords[0]) + abs(bed.centerCoords[1] - self.centerCoords[1])) < closestDist:
+                    closest = self.bedList[y][x]
+        return closest
 
     def act(self) -> None:
         if input_pressed(water_keys):
