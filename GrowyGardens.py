@@ -41,8 +41,8 @@ max_plant_dry = 15 * 30
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 crow_eat_time = 10 * 30
-crow_chance = 0.3
-actionCooldown = 0.3 * 30
+crow_chance = 0.5
+actionCooldown = 0.2 * 30
 collectCooldown = 15 # Number of frames after growing before smth can be collected
 
 class Sprite:
@@ -258,8 +258,11 @@ class Bed:
         else:
             dryBedSprite.draw(self.x, self.y)
         if self.isPopulated or self.isDead:
-            sprite = plantSprites[self.plantType]
-            sprite.draw(self.x, self.y, self.state)
+            try:
+                sprite = plantSprites[self.plantType]
+                sprite.draw(self.x, self.y, self.state)
+            except:
+                print("Error getting plant sprite", self.isDead, self.isPopulated, self.isWatered, self.state)
 
     def drawLandedCrow(self) -> None:
         if type(self.crow) == Crow and self.crow.arrived:
@@ -297,13 +300,10 @@ class Bed:
             self.maturityAge = 0
             self.state = 0
 
-            print(pointsToGive)
             return pointsToGive
         return 0
 
     def age(self):
-
-        # print(self.waterLeft, self.plantAge, self.maturityAge)
 
         # If crow is present then update it
         if type(self.crow) == Crow:
@@ -311,6 +311,7 @@ class Bed:
             if self.crow.atePlant == True:
                 self.isDead = True
                 self.isPopulated = False
+                self.state = 3
             if self.crow.arrived and self.crow.onWayBack:
                 self.crow = True  # Crow is gone
         
@@ -477,8 +478,15 @@ class App:
                 bed.drawFlyingCrow()
 
         # Draw the bottom bar
-        
+        coinIconSprite.draw(0,120)
         pyxel.text(8,121,str(self.points),col=0)
+        canIconSprite.draw(32,120)
+        pyxel.text(40,121,str(1),col=0)
+        seedBagIconSprite.draw(48,120)
+        pyxel.text(56,121,str(2),col=0)
+        batIconSprite.draw(64,120)
+        pyxel.text(72,121,str(3),col=0)
+
 
 
         # Draw bar
