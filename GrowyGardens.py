@@ -46,7 +46,7 @@ playerSprite = Sprite(0,0,8,16,0)
 dryBedSprite = Sprite(8,8,8,8)
 wetBedSprite = Sprite(8,0,8,8)
 
-plantNames = ["green","pink","blue","orang"]
+plantNames = ["green","pink","blue","orange"]
 
 plantSprites = {
     "green": Sprite(16,0,8,8),
@@ -145,6 +145,7 @@ class Crow:
             else:
                 self.x += (self.targetX-self.x)/self.movesToGo
                 self.y += (self.targetY-self.y)/self.movesToGo
+            self.movesToGo -= 1
 
     def shoo(self) -> None:
         self.movesToGo = 15 # frames
@@ -161,7 +162,6 @@ class App:
         pyxel.load("TestGraphics.pyxres")
 
         self.player = Player()
-        self.crows = []
 
         self.testBed = Bed(8,8)
 
