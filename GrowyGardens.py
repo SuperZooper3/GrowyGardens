@@ -97,7 +97,7 @@ class Bed:
             self.crow.shoo()
 
     def age(self):
-        if self.isPopulated and self.isWatered:
+        if self.isPopulated:
             self.plantAge += 1
             if self.timeUntilCrow != 0:
                 self.timeUntilCrow -= 1
@@ -110,7 +110,7 @@ class Bed:
             if type(self.crow) == Crow:
                 self.crow.update()
                 if self.crow.atePlant == True:
-                    pass # Plant dead
+                    self.isDead = True
                 if self.crow.arrived and self.crow.onWayBack:
                     self.crow = True # Crow is gone
         
@@ -156,7 +156,7 @@ class Crow:
         if self.arrived:
             self.clock -= 1
             if self.clock == 0:
-                self.movesToGo = 30 # frames
+                self.movesToGo = 60 # frames
                 self.targetX, self.targetY = 0, 0
                 self.onWayBack = True
                 self.arrived = False
