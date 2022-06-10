@@ -10,5 +10,14 @@ class Crow:
     pass
 
 class App:
-    pass
+    def __init__(self):
+        pass
+
+    def run(self) -> None:
+        pyxel.run(self.update, self.draw)
     
+    def update(self) -> None:
+        pass
+
+    def draw(self) -> None:
+        pass
