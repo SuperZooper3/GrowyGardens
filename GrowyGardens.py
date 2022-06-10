@@ -9,19 +9,23 @@ README GOES HERE
 """
 
 # Key bindings
-up_key = pyxel.KEY_UP
-down_key = pyxel.KEY_DOWN
-left_key = pyxel.KEY_LEFT
-right_key = pyxel.KEY_RIGHT
+up_keys = [pyxel.KEY_UP, pyxel.KEY_W]
+down_keys = [pyxel.KEY_DOWN, pyxel.KEY_S]
+left_keys = [pyxel.KEY_LEFT, pyxel.KEY_A]
+right_keys = [pyxel.KEY_RIGHT, pyxel.KEY_D]
 
-water_key = pyxel.KEY_1
-plant_key = pyxel.KEY_2
-bonk_key = pyxel.KEY_3
+water_keys = [pyxel.KEY_1, pyxel.KEY_J]
+plant_keys = [pyxel.KEY_2, pyxel.KEY_K]
+bonk_keys = [pyxel.KEY_3, pyxel.KEY_L]
 
+def input_pressed(key_list):
+    for k in key_list:
+        if pyxel.btn(k): 
+            return True
+    return False
 
 field_x = 128
 field_y = 120
-
 
 # Balance Variables
 min_plant_age = 10 * 30
@@ -203,16 +207,16 @@ class Player:
         self.lastAction = 0  # 0 water, 1 plant, 2 bonk, also for drawing
 
     def move(self) -> None:
-        if pyxel.btn(up_key):
+        if input_pressed(up_keys):
             self.y -= 1
             self.direction = 3
-        if pyxel.btn(down_key):
+        if input_pressed(down_keys):
             self.y += 1
             self.direction = 0
-        if pyxel.btn(left_key):
+        if input_pressed(left_keys):
             self.x -= 1
             self.direction = 1
-        if pyxel.btn(right_key):
+        if input_pressed(right_keys):
             self.x += 1
             self.direction = 2
 
