@@ -34,6 +34,7 @@ min_plant_dry = 5 * 30
 max_plant_dry = 15 * 30
 crow_eat_time = 10 * 30
 crow_chance = 0.5
+actionCooldown = 1 * 30
 
 
 class Sprite:
@@ -274,7 +275,7 @@ class Bed:
 
     def age(self):
 
-        print(self.waterLeft, self.plantAge, self.maturityAge)
+        # print(self.waterLeft, self.plantAge, self.maturityAge)
 
         if self.isPopulated and self.isWatered:
             self.plantAge += 1
@@ -354,12 +355,21 @@ class Player:
         return closest
 
     def act(self) -> None:
-        if input_pressed(water_keys):
-            self.closestBed.water()
-        elif input_pressed(plant_keys):
-            self.closestBed.plant()
-        elif input_pressed(bonk_keys):
-            self.closestBed.bonk()
+        self.cooldown -= 1
+        if self.cooldown <= 0:
+            if input_pressed(water_keys):
+                self.cooldown = actionCooldown
+                self.lastAction = 0
+                self.closestBed.water()
+            elif input_pressed(plant_keys):
+                self.cooldown = actionCooldown
+                self.lastAction = 1
+                self.closestBed.plant()
+            elif input_pressed(bonk_keys):
+                self.cooldown = actionCooldown
+                self.lastAction = 2
+                self.closestBed.bonk()
+        print("act",self.lastAction,self.cooldown)
 
     def draw(self) -> None:
         personStandFrontSprite.draw(self.x, self.y)
@@ -385,7 +395,7 @@ class App:
         # Testing code
         if pyxel.btnp(pyxel.KEY_O):
             self.testBed.plant()
-            print(self.testBed.timeUntilCrow)
+            # print(self.testBed.timeUntilCrow)
             self.testBed.timeUntilCrow = 30
 
         if pyxel.btnp(pyxel.KEY_U):
