@@ -84,13 +84,14 @@ dryPotagerSprite = Sprite(32,128,16,16)
 wetPotagerSprite = Sprite(32,144,16,16)
 crowSprite = Sprite(0,160,16,16,7)
 crowFlySprite = Sprite(16,160,16,16,7)
+
 personStandFrontSprite = Sprite(32,0,16,32)
 personStandBackSprite = Sprite(48,0,16,32)
 personLeftSprite = Sprite(48,32,16,32)
 personRightSprite = Sprite(32,32,16,32)
 personBatSprite = Sprite(32,64,16,32)
 personWaterSprite = Sprite(48,64,16,32)
-personSeedSprite = Sprtie(32,96,16,32)
+personSeedSprite = Sprite(32,96,16,32)
 
 
 crowSprite = Sprite(32,0,8,8)
@@ -223,15 +224,17 @@ class Player:
                 self.y -= 1
                 self.direction = 3
         if input_pressed(down_keys):
-            if self.y + 1 > field_y - :
+            if self.y + 1 < field_y - personStandFrontSprite.sheetH:
                 self.y += 1
                 self.direction = 0
         if input_pressed(left_keys):
-            self.x -= 1
-            self.direction = 1
+            if self.x - 1 >= 0:
+                self.x -= 1
+                self.direction = 1
         if input_pressed(right_keys):
-            self.x += 1
-            self.direction = 2
+            if self.x + 1 < field_x - personStandFrontSprite.sheetW:
+                self.x += 1
+                self.direction = 2
 
     def draw(self) -> None:
         playerSprite.draw(self.x, self.y)
