@@ -28,6 +28,7 @@ min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
 max_plant_dry = 15 * 30
+crow_eat_time = 5 * 30
 crow_chance = 0.5
 
 class Sprite:
@@ -70,6 +71,7 @@ class Bed:
         self.maturityAge = 0
         self.waterLeft = 0
         self.timeUntilCrow = 0
+        self.crow = False # False means crow hasn't spawned yet, True means crow has spawned and is now gone, and if it's a crow object then the crow is on the scene
     
     def draw(self):
         if self.isWatered:
@@ -88,16 +90,29 @@ class Bed:
         self.plantType = type
         self.plantAge = 0
         self.maturityAge = randint(min_plant_age,max_plant_age)
-        self.waterLeft = randint(min_plant_dry,max_plant_dry)
         self.timeUntilCrow = randint(30, self.maturityAge * (1/crow_chance))
     
+    def bonk(self) -> None:
+        if type(self.crow) == Crow:
+            self.crow.shoo()
+
     def age(self):
         if self.isPopulated and self.isWatered:
             self.plantAge += 1
-            self.timeUntilCrow -= 1
-            self.waterLeft -= 1
-        
-    
+            if self.timeUntilCrow != 0:
+                self.timeUntilCrow -= 1
+            elif self.crow == False:
+                self.crow = Crow(self.x, self.y)
+            if self.waterLeft != 0:
+                self.waterLeft -= 1
+            else:
+                self.isWatered = False
+            if type(self.crow) == Crow:
+                self.crow.update()
+                if self.crow.atePlant == True:
+                    pass # Plant dead
+                if self.crow.arrived and self.crow.onWayBack:
+                    self.crow = True # Crow is gone
         
 
 class Player:
@@ -127,14 +142,15 @@ class Player:
         playerSprite.draw(self.x,self.y)
 
 class Crow:
-    def __init__(self, targetX: int, targetY: int, killTime: int):
+    def __init__(self, targetX: int, targetY: int):
         self.movesToGo = 60 # frames
         self.targetX = targetX
         self.targetY = targetY
         self.x, self.y = 0, 0
         self.arrived = False
         self.onWayBack = False
-        self.clock = killTime
+        self.clock = crow_eat_time
+        self.atePlant = False
 
     def update(self) -> None:
         if self.arrived:
@@ -144,6 +160,7 @@ class Crow:
                 self.targetX, self.targetY = 0, 0
                 self.onWayBack = True
                 self.arrived = False
+                self.atePlant = True
 
         # Movement
         if not self.arrived:
