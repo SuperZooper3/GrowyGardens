@@ -43,20 +43,51 @@ class Sprite:
     def draw(self,x,y):
         pyxel.blt(x ,y , self.sheet, self.sheetX, self.sheetY, self.sheetW,self.sheetH, self.colKey)
 
+class PlantSprite:
+    def __init__(self,seedSprite,sproutSprite,grownSprite):
+        self.seedSprite = seedSprite
+        self.sproutSprite = sproutSprite
+        self.grownSprite = grownSprite
+
+    def draw(self,x,y,n): # n = 0 for seed, n = 1 for sprout, n = 2 for grown
+        if n == 0:
+            self.seedSprite.draw(x,y)
+        elif n == 1:
+            self.sproutSprite.draw(x,y)
+        elif n == 2:
+            self.grownSprite.draw(x,y)
+        else:
+            print("plantSpriteDrawError")
+
 playerSprite = Sprite(0,0,8,16,0)
 dryBedSprite = Sprite(8,8,8,8)
 wetBedSprite = Sprite(8,0,8,8)
 
 crowSprite = Sprite(32,0,8,8)
 
-plantNames = ["green","pink","blue","orange"]
+plantNames = ["green","pink","blue","orang"]
 
 plantSprites = {
-    "green": Sprite(16,0,8,8),
-    "pink": Sprite(24,0,8,8),
-    "blue": Sprite(16,8,8,8),
-    "orange": Sprite(24,8,8,8),
-    "Empty": Sprite(0,0,0,0),
+    "green": PlantSprite(
+        Sprite(16,16,8,8),
+        Sprite(16,32,8,8),
+        Sprite(16,0,8,8),
+    ),
+    "pink": PlantSprite(
+        Sprite(24,16,8,8),
+        Sprite(24,32,8,8),
+        Sprite(24,0,8,8),
+    ),
+    "blue": PlantSprite(
+        Sprite(16,24,8,8),
+        Sprite(16,40,8,8),
+        Sprite(16,32,8,8),
+    ),
+    "orang": PlantSprite(
+        Sprite(24,24,8,8),
+        Sprite(24,40,8,8),
+        Sprite(24,32,8,8),
+    ),
 }
 
 class Bed:
@@ -72,13 +103,16 @@ class Bed:
         self.waterLeft = 0
         self.timeUntilCrow = 0
         self.crow = False # False means crow hasn't spawned yet, True means crow has spawned and is now gone, and if it's a crow object then the crow is on the scene
+        self.state = 0 # n = 0 for seed, n = 1 for sprout, n = 2 for grown
     
     def draw(self):
         if self.isWatered:
             wetBedSprite.draw(self.x, self.y)
         else:
             dryBedSprite.draw(self.x, self.y)
-        plantSprites[self.plantType].draw(self.x,self.y)
+        if self.isPopulated:
+            sprite = plantSprites[self.plantType]
+            sprite.draw(self.x,self.y,self.state)
     
     def drawCrow(self):
         if type(self.crow) == Crow:
@@ -101,25 +135,39 @@ class Bed:
             self.crow.shoo()
 
     def age(self):
-        if self.isPopulated:
+
+        print(self.waterLeft, self.plantAge, self.maturityAge)
+
+        if self.isPopulated and self.isWatered:
             self.plantAge += 1
-            if self.timeUntilCrow != 0:
-                self.timeUntilCrow -= 1
-            elif self.crow == False:
-                self.crow = Crow(self.x, self.y)
-            if self.waterLeft != 0:
-                self.waterLeft -= 1
-            else:
-                self.isWatered = False
-            
-            # If crow is present then update it
-            if type(self.crow) == Crow:
-                self.crow.update()
-                if self.crow.atePlant == True:
-                    self.isDead = True
-                if self.crow.arrived and self.crow.onWayBack:
-                    self.crow = True # Crow is gone
-        
+            self.timeUntilCrow -= 1
+            self.waterLeft -= 1
+
+        if self.waterLeft <= 0:
+            self.isWatered = False
+
+        if self.timeUntilCrow <= 0 and self.crow == None:
+            self.crow = Crow(self.x, self.y)
+
+        # If crow is present then update it
+        if type(self.crow) == Crow:
+            self.crow.update()
+            if self.crow.atePlant == True:
+                self.isDead = True
+            if self.crow.arrived and self.crow.onWayBack:
+                self.crow = True # Crow is gone
+
+        if self.plantAge >= self.maturityAge:
+            self.state = 2
+        elif self.plantAge >= self.maturityAge // 2:
+            self.state = 1
+        else:
+            self.state = 0
+
+    def bonk(self):
+        pass # bonk the crow
+        self.timeUntilCrow = -1
+
 
 class Player:
     def __init__(self):
@@ -201,13 +249,16 @@ class App:
     
     def update(self) -> None:
         self.player.move()
+        self.testBed.age()
 
         # Testing code
         if pyxel.btnp(pyxel.KEY_O):
             self.testBed.plant()
             print(self.testBed.timeUntilCrow)
             self.testBed.timeUntilCrow = 30
-        self.testBed.age()
+        
+        if pyxel.btnp(pyxel.KEY_U):
+            self.testBed.water()
 
     def draw(self) -> None:
         pyxel.cls(3)
