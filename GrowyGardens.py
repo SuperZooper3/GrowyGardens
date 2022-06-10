@@ -1,4 +1,5 @@
 import pyxel
+from random import randint
 
 """
 Comment utiliser
@@ -21,6 +22,14 @@ bonk_key = pyxel.KEY_3
 field_x = 128
 field_y = 120
 
+
+# Balance Variables
+min_plant_age = 10 * 30
+max_plant_age = 20 * 30
+min_plant_dry = 5 * 30
+max_plant_dry = 15 * 30
+crow_chance = 0.5
+
 class Sprite:
     pass
 
@@ -35,11 +44,60 @@ class Sprite:
     def draw(self,x,y):
         pyxel.blt(x ,y , self.sheet, self.sheetX, self.sheetY, self.sheetW,self.sheetH, self.colKey)
 
+playerSprite = Sprite(0,0,8,16,0)
+dryBedSprite = Sprite(8,8,8,8)
+wetBedSprite = Sprite(8,0,8,8)
+
+plantNames = ["green","pink","blue","orang"]
+
+plantSprites = {
+    "green": Sprite(16,0,8,8),
+    "pink": Sprite(24,0,8,8),
+    "blue": Sprite(16,8,8,8),
+    "orang": Sprite(24,8,8,8)
+}
+
 
 class Bed:
     pass
 
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.isDead = False
+        self.isPopulated = False
+        self.isWatered = False
+        self.plantType = "Empty"
+        self.plantAge = 0
+        self.maturityAge = 0
+        self.waterLeft = 0
+        self.timeUntilCrow = 0
+    
+    def draw(self):
+        if self.isWatered:
+            wetBedSprite.draw(self.x, self.y)
+        else:
+            dryBedSprite.draw(self.x, self.y)
+
+    def plant(self, type = plantNames[randint(0,len(plantNames)-1)]):
+        self.isPopulated = True
+        self.plantType = type
+        self.plantAge = 0
+        self.maturityAge = randint(min_plant_age,max_plant_age)
+        self.waterLeft = randint(min_plant_dry,max_plant_dry)
+        self.timeUntilCrow = randint(30, self.maturityAge * (1/crow_chance))
+    
+    def age(self):
+        if self.isPopulated and self.isWatered:
+            self.plantAge += 1
+            self.timeUntilCrow -= 1
+            self.waterLeft -= 1
+        
+        
+
 class Player:
+    pass
+
     def __init__(self):
         self.x = 0
         self.y = 0
@@ -47,8 +105,6 @@ class Player:
         self.cooldown = 0
         self.direction = 0 # 0 down, 1 left, 2 right, 3 up, for sprite drawing
         self.lastAction = 0 # 0 water, 1 plant, 2 bonk, also for drawing
-
-        self.playerSprite = Sprite(0,0,8,16,0)
 
     def move(self):
         if pyxel.btn(up_key):
@@ -65,7 +121,7 @@ class Player:
             self.direction = 2
     
     def draw(self):
-        self.playerSprite.draw(self.x,self.y)
+        playerSprite.draw(self.x,self.y)
 
 class Crow:
     def __init__(self, targetX: int, targetY: int, killTime: int):
@@ -113,14 +169,18 @@ class App:
         self.player = Player()
         self.crows = []
 
+        self.testBed = Bed(8,8)
+
         pyxel.run(self.update, self.draw)
     
     def update(self) -> None:
         self.player.move()
-        print(self.player.x,self.player.y)
 
     def draw(self) -> None:
         pyxel.cls(3)
+        
+        self.testBed.draw()
+
         self.player.draw()
 
 game = App()
