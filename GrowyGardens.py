@@ -208,11 +208,13 @@ class Player:
 
     def move(self) -> None:
         if input_pressed(up_keys):
-            self.y -= 1
-            self.direction = 3
+            if self.y -1 >= 0:
+                self.y -= 1
+                self.direction = 3
         if input_pressed(down_keys):
-            self.y += 1
-            self.direction = 0
+            if self.y + 1 > field_y - :
+                self.y += 1
+                self.direction = 0
         if input_pressed(left_keys):
             self.x -= 1
             self.direction = 1
