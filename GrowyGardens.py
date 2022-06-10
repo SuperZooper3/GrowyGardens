@@ -55,7 +55,7 @@ plantSprites = {
     "green": Sprite(16,0,8,8),
     "pink": Sprite(24,0,8,8),
     "blue": Sprite(16,8,8,8),
-    "orang": Sprite(24,8,8,8),
+    "orange": Sprite(24,8,8,8),
     "Empty": Sprite(0,0,0,0),
 }
 
@@ -79,6 +79,8 @@ class Bed:
         else:
             dryBedSprite.draw(self.x, self.y)
         plantSprites[self.plantType].draw(self.x,self.y)
+        if type(self.crow) == Crow:
+            self.crow.draw()
     
     def water(self) -> None:
         self.waterLeft = randint(min_plant_dry,max_plant_dry)
@@ -107,6 +109,8 @@ class Bed:
                 self.waterLeft -= 1
             else:
                 self.isWatered = False
+            
+            # If crow is present then update it
             if type(self.crow) == Crow:
                 self.crow.update()
                 if self.crow.atePlant == True:
@@ -199,6 +203,8 @@ class App:
         # Testing code
         if pyxel.btnp(pyxel.KEY_O):
             self.testBed.plant()
+            print(self.testBed.timeUntilCrow)
+        self.testBed.age()
 
     def draw(self) -> None:
         pyxel.cls(3)
