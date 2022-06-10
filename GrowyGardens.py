@@ -311,6 +311,7 @@ class Bed:
             if self.crow.atePlant == True:
                 self.isDead = True
                 self.isPopulated = False
+                self.state = 3
             if self.crow.arrived and self.crow.onWayBack:
                 self.crow = True  # Crow is gone
         
