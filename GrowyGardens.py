@@ -34,6 +34,7 @@ min_plant_dry = 5 * 30
 max_plant_dry = 15 * 30
 crow_eat_time = 10 * 30
 crow_chance = 0.5
+actionCooldown = 1 * 30
 
 
 class Sprite:
@@ -91,12 +92,7 @@ personLeftSprite = Sprite(48,32,16,30)
 personRightSprite = Sprite(32,32,16,30)
 personBatSprite = Sprite(32,64,16,30)
 personWaterSprite = Sprite(48,64,16,30)
-personSeedSprite = Sprtie(32,96,16,30)
-
-
-crowSprite = Sprite(32,0,8,8)
-
-crowSprite = Sprite(32, 0, 8, 8)
+personSeedSprite = Sprite(32,96,16,30)
 
 plantNames = ["pinkFlower", "blueFlower", "yellowFlower", "tomato","blueberry","lettuce","carrot","mushroom"]
 
@@ -208,25 +204,29 @@ class Crow:
             self.movesToGo -= 1
 
     def shoo(self) -> None:
-        self.movesToGo = 15  # frames
-        self.onWayBack = True
-        self.arrived = False
-        edge = randint(0, 3)  # 0 bottom, 1 left, 2 top, 3 right
-        if edge == 0:
-            self.targetX = randint(0, 127)
-            self.targetY = 127
-        elif edge == 1:
-            self.targetX = 0
-            self.targetY = randint(0, 127)
-        elif edge == 2:
-            self.targetX = randint(0, 127)
-            self.targetY = 0
-        elif edge == 3:
-            self.targetX = 127
-            self.targetY = randint(0, 127)
+        if self.arrived:
+            self.movesToGo = 15  # frames
+            self.onWayBack = True
+            self.arrived = False
+            edge = randint(0, 3)  # 0 bottom, 1 left, 2 top, 3 right
+            if edge == 0:
+                self.targetX = randint(0, 127)
+                self.targetY = 127
+            elif edge == 1:
+                self.targetX = 0
+                self.targetY = randint(0, 127)
+            elif edge == 2:
+                self.targetX = randint(0, 127)
+                self.targetY = 0
+            elif edge == 3:
+                self.targetX = 127
+                self.targetY = randint(0, 127)
 
     def draw(self) -> None:
-        crowSprite.draw(self.x, self.y)
+        if self.arrived:
+            crowSprite.draw(self.x, self.y)
+        else:
+            crowFlySprite.draw(self.x,self.y)
 
 class Bed:
     def __init__(self, x: int, y: int):
@@ -275,7 +275,7 @@ class Bed:
 
     def age(self):
 
-        print(self.waterLeft, self.plantAge, self.maturityAge)
+        # print(self.waterLeft, self.plantAge, self.maturityAge)
 
         if self.isPopulated and self.isWatered:
             self.plantAge += 1
@@ -306,8 +306,9 @@ class Bed:
             self.state = 0
 
     def bonk(self):
-        self.crow.shoo()
-        self.timeUntilCrow = -1
+        if type(self.crow) == Crow:
+            self.crow.shoo()
+            self.timeUntilCrow = -1
 
 
 class Player:
@@ -319,8 +320,8 @@ class Player:
         self.direction = 0  # 0 down, 1 left, 2 right, 3 up, for sprite drawing
         self.lastAction = 0  # 0 water, 1 plant, 2 bonk, also for drawing
         self.bedList = bedList
+        self.centerCoords = (self.x + personStandFrontSprite.sheetW / 2, self.y + personStandFrontSprite.sheetH / 2)
         self.closestBed = self.computeClosestBed()
-        centerCoords = (self.x + personStandFrontSprite.sheetW / 2, self.y + personStandFrontSprite.sheetH / 2)
 
     def move(self) -> None:
         if input_pressed(up_keys):
@@ -354,12 +355,21 @@ class Player:
         return closest
 
     def act(self) -> None:
-        if input_pressed(water_keys):
-            self.closestBed.water()
-        elif input_pressed(plant_keys):
-            self.closestBed.plant()
-        elif input_pressed(bonk_keys):
-            self.closestBed.bonk()
+        self.cooldown -= 1
+        if self.cooldown <= 0:
+            if input_pressed(water_keys):
+                self.cooldown = actionCooldown
+                self.lastAction = 0
+                self.closestBed.water()
+            elif input_pressed(plant_keys):
+                self.cooldown = actionCooldown
+                self.lastAction = 1
+                self.closestBed.plant()
+            elif input_pressed(bonk_keys):
+                self.cooldown = actionCooldown
+                self.lastAction = 2
+                self.closestBed.bonk()
+        print("act",self.lastAction,self.cooldown)
 
     def draw(self) -> None:
         personStandFrontSprite.draw(self.x, self.y)
@@ -369,10 +379,11 @@ class App:
     def __init__(self):
         pyxel.init(128, 128, title="Nuit du c0de 2022")
         pyxel.load("GrowyGardens.pyxres")
-        self.bedList = [] # List of Lists
-        self.player = Player(self.bedList)
 
         self.testBed = Bed(80, 80)
+
+        self.bedList = [[self.testBed]] # List of Lists
+        self.player = Player(self.bedList)
 
         pyxel.run(self.update, self.draw)
 
@@ -384,7 +395,7 @@ class App:
         # Testing code
         if pyxel.btnp(pyxel.KEY_O):
             self.testBed.plant()
-            print(self.testBed.timeUntilCrow)
+            # print(self.testBed.timeUntilCrow)
             self.testBed.timeUntilCrow = 30
 
         if pyxel.btnp(pyxel.KEY_U):
@@ -392,6 +403,7 @@ class App:
 
     def draw(self) -> None:
         pyxel.cls(3)
+        pyxel.bltm(0,0,0,0,0,128,128) # draw the tilemap
 
         self.testBed.draw()
 
