@@ -80,8 +80,8 @@ clockFirstSprite = Sprite(48,112,16,8)
 clockSecondSprite = Sprite(48,120,16,8)
 clockThirdSprite = Sprite(48,128,16,8)
 clockFourthSprite = Sprite(48,136,16,8)
-dryPotagerSprite = Sprite(32,128,16,16)
-wetPotagerSprite = Sprite(32,144,16,16)
+dryBedSprite = Sprite(32,128,16,16)
+wetBedSprite = Sprite(32,144,16,16)
 crowSprite = Sprite(0,160,16,16,7)
 crowFlySprite = Sprite(16,160,16,16,7)
 
@@ -237,7 +237,7 @@ class Player:
                 self.direction = 2
 
     def draw(self) -> None:
-        playerSprite.draw(self.x, self.y)
+        personStandFrontSprite.draw(self.x, self.y)
 
 
 class Crow:
