@@ -152,21 +152,45 @@ class Crow:
         self.movesToGo = 60 # frames
         self.targetX = targetX
         self.targetY = targetY
-        self.x, self.y = 0, 0
         self.arrived = False
         self.onWayBack = False
         self.clock = crow_eat_time
         self.atePlant = False
+        edge = randint(0, 3) # 0 bottom, 1 left, 2 top, 3 right
+        if edge == 0:
+            self.x = randint(0, 127)
+            self.y = 127
+        elif edge == 1:
+            self.x = 0
+            self.y = randint(0, 127)
+        elif edge == 2:
+            self.x = randint(0, 127)
+            self.y = 0
+        elif edge == 3:
+            self.x = 127
+            self.y = randint(0, 127)
 
     def update(self) -> None:
         if self.arrived:
             self.clock -= 1
             if self.clock == 0:
                 self.movesToGo = 60 # frames
-                self.targetX, self.targetY = 0, 0
                 self.onWayBack = True
                 self.arrived = False
                 self.atePlant = True
+                edge = randint(0, 3) # 0 bottom, 1 left, 2 top, 3 right
+                if edge == 0:
+                    self.targetX = randint(0, 127)
+                    self.targetY = 127
+                elif edge == 1:
+                    self.targetX = 0
+                    self.targetY = randint(0, 127)
+                elif edge == 2:
+                    self.targetX = randint(0, 127)
+                    self.targetY = 0
+                elif edge == 3:
+                    self.targetX = 127
+                    self.targetY = randint(0, 127)
 
         # Movement
         if not self.arrived:
@@ -181,9 +205,21 @@ class Crow:
 
     def shoo(self) -> None:
         self.movesToGo = 15 # frames
-        self.targetX, self.targetY = 0, 0
         self.onWayBack = True
         self.arrived = False
+        edge = randint(0, 3) # 0 bottom, 1 left, 2 top, 3 right
+        if edge == 0:
+            self.targetX = randint(0, 127)
+            self.targetY = 127
+        elif edge == 1:
+            self.targetX = 0
+            self.targetY = randint(0, 127)
+        elif edge == 2:
+            self.targetX = randint(0, 127)
+            self.targetY = 0
+        elif edge == 3:
+            self.targetX = 127
+            self.targetY = randint(0, 127)
 
     def draw(self) -> None:
         crowSprite.draw(self.x, self.y)
