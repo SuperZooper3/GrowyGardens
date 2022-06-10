@@ -74,6 +74,10 @@ class Bed:
             wetBedSprite.draw(self.x, self.y)
         else:
             dryBedSprite.draw(self.x, self.y)
+    
+    def water(self) -> None:
+        self.waterLeft = randint(min_plant_dry,max_plant_dry)
+        self.isWatered = True
 
     def plant(self, type = plantNames[randint(0,len(plantNames)-1)]):
         self.isPopulated = True
