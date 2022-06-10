@@ -152,6 +152,12 @@ plantSprites = {
         Sprite(0, 112, 16, 16),
         Sprite(16,144,16,16),
     ),
+    "Empty": PlantSprite(
+        Sprite(0,0,0,0),
+        Sprite(0,0,0,0),
+        Sprite(0,0,0,0),
+        Sprite(0,0,0,0),
+    )
 }
 
 class Crow:
@@ -198,6 +204,9 @@ class Crow:
                 elif edge == 3:
                     self.targetX = 127 + crowSprite.sheetW
                     self.targetY = randint(0, 127)
+                
+                # Play death music
+                pyxel.play(0,2)
 
         # Movement
         if not self.arrived:
@@ -300,6 +309,7 @@ class Bed:
             self.maturityAge = 0
             self.state = 0
 
+            pyxel.play(0,3)
             return pointsToGive
         return 0
 
@@ -455,7 +465,6 @@ class App:
         
         self.clockState=(((int(pyxel.frame_count-self.startFrame)/30)%60)//15)
 
-
         self.points += self.player.move()
         self.player.act()
 
@@ -478,18 +487,21 @@ class App:
                 bed.drawFlyingCrow()
 
         # Draw the bottom bar
+
         coinIconSprite.draw(0,120)
         pyxel.text(10,121,str(self.points),col=0)
+
         canIconSprite.draw(42,120)
         pyxel.text(50,121,str(1),col=0)
+
         seedBagIconSprite.draw(58,120)
         pyxel.text(66,121,str(2),col=0)
+
         batIconSprite.draw(74,120)
         pyxel.text(80,121,str(3),col=0)
 
 
-
-        # Draw bar
+        # Draw clock
         if self.clockState==0:
             clockFirstSprite.draw(112,120)
         if self.clockState==1:
@@ -500,6 +512,4 @@ class App:
             clockFourthSprite.draw(112,120)
         
         
-
-
 game = App()
