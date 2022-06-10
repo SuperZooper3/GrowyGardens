@@ -447,7 +447,7 @@ class App:
             for bed in row:
                 bed.age()
         
-        clockState=int((((pyxel.frame_count-self.startFrame)/30)%60)//15)
+        clockState=(((int(pyxel.frame_count-self.startFrame)/30)%60)//15)
         if clockState==0:
             clockFirstSprite.draw(112,120)
         if clockState==1:
