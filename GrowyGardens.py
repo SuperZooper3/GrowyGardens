@@ -272,8 +272,9 @@ class Bed:
             self.crow.draw()
 
     def water(self) -> None:
-        self.waterLeft = randint(min_plant_dry, max_plant_dry)
-        self.isWatered = True
+        if not self.isDead:
+            self.waterLeft = randint(min_plant_dry, max_plant_dry)
+            self.isWatered = True
 
     def plant(self) -> None:
         if not self.isPopulated:
@@ -306,19 +307,6 @@ class Bed:
 
         # print(self.waterLeft, self.plantAge, self.maturityAge)
 
-        if self.isPopulated and self.isWatered:
-            self.plantAge += 1
-            self.timeUntilCrow -= 1
-            self.waterLeft -= 1
-
-        if self.waterLeft <= 0:
-            self.isWatered = False
-
-        if self.timeUntilCrow == 0 and self.crow == None and self.hasCrowSpawned == False:
-            self.crow = Crow(self.x, self.y)
-            self.timeUntilCrow = -1
-            self.hasCrowSpawned = True
-
         # If crow is present then update it
         if type(self.crow) == Crow:
             self.crow.update()
@@ -327,15 +315,29 @@ class Bed:
                 self.isPopulated = False
             if self.crow.arrived and self.crow.onWayBack:
                 self.crow = True  # Crow is gone
+        
+        if not self.isDead:
+            if self.isPopulated and self.isWatered:
+                self.plantAge += 1
+                self.timeUntilCrow -= 1
+                self.waterLeft -= 1
 
-        if self.plantAge >= self.maturityAge:
-            self.state = 2
-        elif self.plantAge >= self.maturityAge // 2:
-            self.state = 1
-        elif self.isDead:
-            self.state = 3
-        else:
-            self.state = 0
+            if self.waterLeft <= 0:
+                self.isWatered = False
+
+            if self.timeUntilCrow == 0 and self.crow == None and self.hasCrowSpawned == False:
+                self.crow = Crow(self.x, self.y)
+                self.timeUntilCrow = -1
+                self.hasCrowSpawned = True
+
+            if self.plantAge >= self.maturityAge:
+                self.state = 2
+            elif self.plantAge >= self.maturityAge // 2:
+                self.state = 1
+            elif self.isDead:
+                self.state = 3
+            else:
+                self.state = 0
 
     def bonk(self):
         if type(self.crow) == Crow:
