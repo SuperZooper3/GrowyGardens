@@ -1,5 +1,6 @@
 import pyxel
 from random import randint
+from math import sqrt
 
 """
 Comment utiliser
@@ -248,7 +249,7 @@ class Bed:
         self.timeUntilCrow = 1
         self.crow = None
         self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
-        self.centerCoords = (self.x + (dryBedSprite.sheetW - self.x) / 2, self.y + (dryBedSprite.sheetH - self.y) / 2)
+        self.centerCoords = (self.x + dryBedSprite.sheetW / 2, self.y + dryBedSprite.sheetH / 2)
 
     def draw(self) -> None:
         if self.isWatered:
@@ -358,12 +359,15 @@ class Player:
                 self.closestBed = self.computeClosestBed()
 
     def computeClosestBed(self) -> Bed:
+        self.centerCoords = (self.x + personStandFrontSprite.sheetW / 2, self.y + personStandFrontSprite.sheetH / 2)
         closest = self.bedList[0][0]
-        closestDist = abs(closest.centerCoords[0] - self.centerCoords[0]) + abs(closest.centerCoords[1] - self.centerCoords[1])
+        closestDist = sqrt((closest.centerCoords[0] - self.centerCoords[0])**2 + (closest.centerCoords[1] - self.centerCoords[1])**2)
         for y, row in enumerate(self.bedList):
             for x, bed in enumerate(row):
-                if (abs(bed.centerCoords[0] - self.centerCoords[0]) + abs(bed.centerCoords[1] - self.centerCoords[1])) < closestDist:
+                dist = sqrt((bed.centerCoords[0] - self.centerCoords[0])**2 + (bed.centerCoords[1] - self.centerCoords[1])**2)
+                if dist < closestDist:
                     closest = self.bedList[y][x]
+                    closestDist = dist
         return closest
 
     def act(self) -> None:
