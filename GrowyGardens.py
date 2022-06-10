@@ -194,17 +194,21 @@ class Player:
 
     def move(self) -> None:
         if pyxel.btn(up_key):
-            self.y -= 1
-            self.direction = 3
+            if self.y > 0:
+                self.y -= 1
+                self.direction = 3
         if pyxel.btn(down_key):
-            self.y += 1
-            self.direction = 0
+            if self.y < 104:
+                self.y += 1
+                self.direction = 0
         if pyxel.btn(left_key):
-            self.x -= 1
-            self.direction = 1
+            if self.x > 0:
+                self.x -= 1
+                self.direction = 1
         if pyxel.btn(right_key):
-            self.x += 1
-            self.direction = 2
+            if self.x < 120:
+                self.x += 1
+                self.direction = 2
 
     def draw(self) -> None:
         playerSprite.draw(self.x, self.y)
