@@ -40,8 +40,8 @@ min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 crow_eat_time = 10 * 30
 crow_chance = 0.5
-actionCooldown = 1 * 30
-
+actionCooldown = 0.5 * 30
+collectCooldown = 15 # Number of frames after growing before smth can be collected
 
 class Sprite:
     def __init__(self, sheetX: int, sheetY: int, sheetW: int, sheetH: int, colourKey: int = 0):
@@ -101,6 +101,7 @@ personWaterSprite = Sprite(48,64,16,30)
 personPlantSprite = Sprite(32,96,16,30)
 
 plantNames = ["pinkFlower", "blueFlower", "yellowFlower", "tomato","blueberry","lettuce","carrot","mushroom"]
+plantPoints = {"pinkFlower": 30, "blueFlower": 10, "yellowFlower": 15, "tomato":5, "lettuce":5, "carrot":10,"blueFlower":15,"mushroom":25}
 
 plantSprites = {
     "pinkFlower": PlantSprite(
@@ -243,11 +244,11 @@ class Bed:
         self.isWatered = False
         self.plantType = "Empty"
         self.plantAge = 0
-        self.maturityAge = 0
+        self.maturityAge = 1
         self.waterLeft = 0
         self.timeUntilCrow = 1
         self.crow = None
-        self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
+        self.state = -1  # n = 0 for seed, n = 1 for sprout, n = 2 for grown, -1 for nothing
         self.centerCoords = (self.x + (dryBedSprite.sheetW - self.x) / 2, self.y + (dryBedSprite.sheetH - self.y) / 2)
 
     def draw(self) -> None:
@@ -272,17 +273,30 @@ class Bed:
         self.isWatered = True
 
     def plant(self) -> None:
-        type = plantNames[randint(0, len(plantNames)-1)]
-        self.isPopulated = True
-        self.plantType = type
-        self.plantAge = 0
-        self.maturityAge = randint(min_plant_age, max_plant_age)
-        if self.timeUntilCrow > 0:
+        if not self.isPopulated:
+            type = plantNames[randint(0, len(plantNames)-1)]
+            self.isPopulated = True
+            self.plantType = type
+            self.plantAge = 0
+            self.maturityAge = randint(min_plant_age, max_plant_age)
             self.timeUntilCrow = randint(30, self.maturityAge * (1/crow_chance))
 
     def bonk(self) -> None:
         if type(self.crow) == Crow:
             self.crow.shoo()
+
+    def collect(self) -> int:
+        if self.isPopulated and self.plantAge >= self.maturityAge + collectCooldown and not self.isDead:
+            pointsToGive = plantPoints[self.plantType]
+            
+            self.isPopulated = False
+            self.plantType = "Empty"
+            self.maturityAge = 0
+            self.timeUntilCrow = 1
+            self.state = 0
+
+            print(pointsToGive)    
+            return pointsToGive
 
     def age(self):
 
@@ -356,6 +370,7 @@ class Player:
                 self.x += 1
                 self.direction = 2
                 self.closestBed = self.computeClosestBed()
+        self.closestBed.collect()
 
     def computeClosestBed(self) -> Bed:
         closest = self.bedList[0][0]
@@ -381,7 +396,7 @@ class Player:
                 self.cooldown = actionCooldown
                 self.lastAction = 2
                 self.closestBed.bonk()
-        print("act",self.lastAction,self.cooldown)
+        # print("act",self.lastAction,self.cooldown)
 
     def draw(self) -> None:
         if self.cooldown > 0:
@@ -434,8 +449,6 @@ class App:
         if clockState==3:
             pass #draw clockFourthSprite
 
-
-
         self.player.move()
         self.player.act()
 
@@ -456,6 +469,9 @@ class App:
         for row in self.bedList:
             for bed in row:
                 bed.drawFlyingCrow()
+
+        # Draw the bottom bar
+
 
 
 game = App()
