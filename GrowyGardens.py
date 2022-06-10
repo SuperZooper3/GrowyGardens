@@ -249,6 +249,7 @@ class Bed:
         self.waterLeft = 0
         self.timeUntilCrow = 1
         self.crow = None
+        self.hasCrowSpawned = False
         self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
         self.centerCoords = (self.x + dryBedSprite.sheetW / 2, self.y + dryBedSprite.sheetH / 2)
 
@@ -257,7 +258,7 @@ class Bed:
             wetBedSprite.draw(self.x, self.y)
         else:
             dryBedSprite.draw(self.x, self.y)
-        if self.isPopulated:
+        if self.isPopulated or self.isDead:
             sprite = plantSprites[self.plantType]
             sprite.draw(self.x, self.y, self.state)
 
@@ -281,6 +282,7 @@ class Bed:
             self.plantAge = 0
             self.maturityAge = randint(min_plant_age, max_plant_age)
             self.timeUntilCrow = randint(30, self.maturityAge * (1/crow_chance))
+            self.hasCrowSpawned = False
 
     def bonk(self) -> None:
         if type(self.crow) == Crow:
@@ -293,10 +295,9 @@ class Bed:
             self.isPopulated = False
             self.plantType = "Empty"
             self.maturityAge = 0
-            self.timeUntilCrow = 1
             self.state = 0
 
-            print(pointsToGive)    
+            print(pointsToGive)
             return pointsToGive
 
     def age(self):
@@ -311,8 +312,10 @@ class Bed:
         if self.waterLeft <= 0:
             self.isWatered = False
 
-        if self.timeUntilCrow <= 0 and self.crow == None:
+        if self.timeUntilCrow == 0 and self.crow == None and self.hasCrowSpawned == False:
             self.crow = Crow(self.x, self.y)
+            self.timeUntilCrow = -1
+            self.hasCrowSpawned = True
 
         # If crow is present then update it
         if type(self.crow) == Crow:
