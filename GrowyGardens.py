@@ -32,7 +32,7 @@ crow_eat_time = 10 * 30
 crow_chance = 0.5
 
 class Sprite:
-    def __init__(self, sheetX, sheetY, sheetW, sheetH, colourKey = 0):
+    def __init__(self, sheetX: int, sheetY: int, sheetW: int, sheetH: int, colourKey: int = 0):
         self.sheetX = sheetX
         self.sheetY = sheetY
         self.sheetW = sheetW
@@ -40,7 +40,7 @@ class Sprite:
         self.colKey = colourKey
         self.sheet = 0
 
-    def draw(self,x,y):
+    def draw(self, x: int, y: int) -> None:
         pyxel.blt(x ,y , self.sheet, self.sheetX, self.sheetY, self.sheetW,self.sheetH, self.colKey)
 
 playerSprite = Sprite(0,0,8,16,0)
@@ -60,7 +60,7 @@ plantSprites = {
 }
 
 class Bed:
-    def __init__(self,x,y):
+    def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
         self.isDead = False
@@ -73,14 +73,14 @@ class Bed:
         self.timeUntilCrow = 0
         self.crow = False # False means crow hasn't spawned yet, True means crow has spawned and is now gone, and if it's a crow object then the crow is on the scene
     
-    def draw(self):
+    def draw(self) -> None:
         if self.isWatered:
             wetBedSprite.draw(self.x, self.y)
         else:
             dryBedSprite.draw(self.x, self.y)
         plantSprites[self.plantType].draw(self.x,self.y)
     
-    def drawCrow(self):
+    def drawCrow(self) -> None:
         if type(self.crow) == Crow:
             self.crow.draw()
     
@@ -88,7 +88,7 @@ class Bed:
         self.waterLeft = randint(min_plant_dry,max_plant_dry)
         self.isWatered = True
 
-    def plant(self):
+    def plant(self) -> None:
         type = plantNames[randint(0,len(plantNames)-1)]
         self.isPopulated = True
         self.plantType = type
@@ -100,7 +100,7 @@ class Bed:
         if type(self.crow) == Crow:
             self.crow.shoo()
 
-    def age(self):
+    def age(self) -> None:
         if self.isPopulated:
             self.plantAge += 1
             if self.timeUntilCrow != 0:
@@ -130,7 +130,7 @@ class Player:
         self.direction = 0 # 0 down, 1 left, 2 right, 3 up, for sprite drawing
         self.lastAction = 0 # 0 water, 1 plant, 2 bonk, also for drawing
 
-    def move(self):
+    def move(self) -> None:
         if pyxel.btn(up_key):
             self.y -= 1
             self.direction = 3
@@ -144,7 +144,7 @@ class Player:
             self.x += 1
             self.direction = 2
     
-    def draw(self):
+    def draw(self) -> None:
         playerSprite.draw(self.x,self.y)
 
 class Crow:
