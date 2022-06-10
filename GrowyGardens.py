@@ -28,7 +28,7 @@ min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
 max_plant_dry = 15 * 30
-crow_eat_time = 5 * 30
+crow_eat_time = 10 * 30
 crow_chance = 0.5
 
 class Sprite:
@@ -79,6 +79,8 @@ class Bed:
         else:
             dryBedSprite.draw(self.x, self.y)
         plantSprites[self.plantType].draw(self.x,self.y)
+    
+    def drawCrow(self):
         if type(self.crow) == Crow:
             self.crow.draw()
     
@@ -193,7 +195,7 @@ class App:
 
         self.player = Player()
 
-        self.testBed = Bed(8,8)
+        self.testBed = Bed(80,80)
 
         pyxel.run(self.update, self.draw)
     
@@ -204,6 +206,7 @@ class App:
         if pyxel.btnp(pyxel.KEY_O):
             self.testBed.plant()
             print(self.testBed.timeUntilCrow)
+            self.testBed.timeUntilCrow = 30
         self.testBed.age()
 
     def draw(self) -> None:
@@ -212,5 +215,6 @@ class App:
         self.testBed.draw()
 
         self.player.draw()
+        self.testBed.drawCrow()
 
 game = App()
