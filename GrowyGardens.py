@@ -86,7 +86,7 @@ personLeftSprite = Sprite(48,32,16,32)
 personRightSprite = Sprite(32,32,16,32)
 personBatSprite = Sprite(32,64,16,32)
 personWaterSprite = Sprite(48,64,16,32)
-personSeedSprite = Sprtie(32,96,16,32)
+personSeedSprite = Sprite(32,96,16,32)
 
 
 crowSprite = Sprite(32,0,8,8)
@@ -135,7 +135,7 @@ class Bed:
         self.maturityAge = 0
         self.waterLeft = 0
         self.timeUntilCrow = 0
-        self.crow = False  # False means crow hasn't spawned yet, True means crow has spawned and is now gone, and if it's a crow object then the crow is on the scene
+        self.crow = None
         self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
 
     def draw(self) -> None:
@@ -200,7 +200,7 @@ class Bed:
             self.state = 0
 
     def bonk(self):
-        pass  # bonk the crow
+        self.crow.shoo()
         self.timeUntilCrow = -1
 
 
