@@ -78,14 +78,23 @@ class Crow:
         self.clock = killTime
 
     def update(self) -> None:
+        if self.arrived:
+            self.clock -= 1
+            if self.clock == 0:
+                self.movesToGo = 30 # frames
+                self.targetX, self.targetY = 0, 0
+                self.onWayBack = True
+                self.arrived = False
+
         # Movement
-        if self.movesToGo == 1:
-            self.x = self.targetX
-            self.y = self.targetY
-            self.arrived = True
-        else:
-            self.x += (self.targetX-self.x)/self.movesToGo
-            self.y += (self.targetY-self.y)/self.movesToGo
+        if not self.arrived:
+            if self.movesToGo == 1:
+                self.x = self.targetX
+                self.y = self.targetY
+                self.arrived = True
+            else:
+                self.x += (self.targetX-self.x)/self.movesToGo
+                self.y += (self.targetY-self.y)/self.movesToGo
 
     def shoo(self) -> None:
         self.movesToGo = 15 # frames
@@ -102,6 +111,7 @@ class App:
         pyxel.load("TestGraphics.pyxres")
 
         self.player = Player()
+        self.crows = []
 
         pyxel.run(self.update, self.draw)
     
