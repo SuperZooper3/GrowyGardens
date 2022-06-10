@@ -33,15 +33,16 @@ bed_row_size = 5
 bed_column_size = 5
 
 # Balance Variables
-player_speed = 2
+game_duration = 180 * 30
+player_speed = 1.2
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
-max_plant_dry = 15 * 30
+max_plant_dry = 17 * 30
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
-crow_eat_time = 10 * 30
-crow_chance = 0.5
+crow_eat_time = 5 * 30
+crow_chance = 0.3
 actionCooldown = 0.2 * 30
 collectCooldown = 15 # Number of frames after growing before smth can be collected
 
@@ -444,6 +445,7 @@ class App:
         pyxel.load("GrowyGardens.pyxres")
         self.startFrame = 0
         self.points = 0
+        self.gameOver = False
 
         self.bedList = [
             [
@@ -459,57 +461,70 @@ class App:
         pyxel.run(self.update, self.draw)
 
     def update(self) -> None:
-        for row in self.bedList:
-            for bed in row:
-                bed.age()
-        
-        self.clockState=(((int(pyxel.frame_count-self.startFrame)/30)%60)//15)
+        if not self.gameOver:
+            if pyxel.frame_count - self.startFrame >= game_duration:
+                self.gameOver = True
+            for row in self.bedList:
+                for bed in row:
+                    bed.age()
+            self.points += self.player.move()
+            self.player.act()
+
+            self.clockState=(((int(pyxel.frame_count-self.startFrame)/30)%60)//15)
+
 
         self.points += self.player.move()
         self.player.act()
 
     def draw(self) -> None:
-        pyxel.cls(3)
-        pyxel.bltm(0,0,0,0,0,128,128) # draw the tilemap
+        if not self.gameOver:
+            pyxel.cls(3)
+            pyxel.bltm(0,0,0,0,0,128,128) # draw the tilemap
 
-        for row in self.bedList:
-            for bed in row:
-                bed.draw()
+            for row in self.bedList:
+                for bed in row:
+                    bed.draw()
 
-        for row in self.bedList:
-            for bed in row:
-                bed.drawLandedCrow()
+            for row in self.bedList:
+                for bed in row:
+                    bed.drawLandedCrow()
 
-        self.player.draw()
+            self.player.draw()
 
-        for row in self.bedList:
-            for bed in row:
-                bed.drawFlyingCrow()
+            for row in self.bedList:
+                for bed in row:
+                    bed.drawFlyingCrow()
 
-        # Draw the bottom bar
+            # Draw the bottom bar
 
-        coinIconSprite.draw(0,120)
-        pyxel.text(10,121,str(self.points),col=0)
+            coinIconSprite.draw(0,120)
+            pyxel.text(10,121,str(self.points),col=0)
 
-        canIconSprite.draw(42,120)
-        pyxel.text(50,121,str(1),col=0)
+            canIconSprite.draw(42,120)
+            pyxel.text(50,121,str(1),col=0)
 
-        seedBagIconSprite.draw(58,120)
-        pyxel.text(66,121,str(2),col=0)
+            seedBagIconSprite.draw(58,120)
+            pyxel.text(66,121,str(2),col=0)
 
-        batIconSprite.draw(74,120)
-        pyxel.text(80,121,str(3),col=0)
+            batIconSprite.draw(74,120)
+            pyxel.text(80,121,str(3),col=0)
 
 
-        # Draw clock
-        if self.clockState==0:
-            clockFirstSprite.draw(112,120)
-        if self.clockState==1:
-            clockSecondSprite.draw(112,120)
-        if self.clockState==2:
-            clockThirdSprite.draw(112,120)
-        if self.clockState==3:
-            clockFourthSprite.draw(112,120)
+            # Draw clock
+            if self.clockState==0:
+                clockFirstSprite.draw(112,120)
+            if self.clockState==1:
+                clockSecondSprite.draw(112,120)
+            if self.clockState==2:
+                clockThirdSprite.draw(112,120)
+            if self.clockState==3:
+                clockFourthSprite.draw(112,120)
+        else:
+            # Render game over screen
+            pyxel.rect(20, 20, 88, 88, 0)
+            pyxel.text(43, 24, "C'EST FINI!", 10)
+            pyxel.text(24, 42, f"Vous avez reussi\na obtenir {self.points} points\nen {int(game_duration/30)} secondes.", 7)
+            pyxel.text(24, 68, "Appuyez sur la touche\nEscape/Echapper pour\nquitter le jeu.", 7)
         
         
 game = App()
