@@ -216,9 +216,6 @@ class Crow:
                     self.targetX = 127 + crowSprite.sheetW
                     self.targetY = randint(0, 127)
 
-                # Play death music
-                pyxel.play(0, 2)
-
         # Movement
         if not self.arrived:
             if self.movesToGo == 1:
@@ -325,6 +322,7 @@ class Bed:
             self.plantType = "Empty"
             self.maturityAge = 0
             self.state = 0
+            self.bonk()
 
             pyxel.play(0, 3)
             return pointsToGive
@@ -339,6 +337,13 @@ class Bed:
                 self.isDead = True
                 self.isPopulated = False
                 self.state = 3
+
+                self.isWatered = False
+                self.waterLeft = 0
+
+                # Play death music
+                pyxel.play(1, 2)
+
             if self.crow.arrived and self.crow.onWayBack:
                 self.crow = True  # Crow is gone
 
