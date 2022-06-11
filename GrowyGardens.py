@@ -105,8 +105,8 @@ personBonkSprite = Sprite(32,64,16,30)
 personWaterSprite = Sprite(48,64,16,30)
 personPlantSprite = Sprite(32,96,16,30)
 
-plantNames = ["pinkFlower", "blueFlower", "yellowFlower", "tomato","blueberry","lettuce","carrot","mushroom"]
-plantPoints = {"pinkFlower": 30, "blueFlower": 10, "yellowFlower": 15, "tomato":5, "lettuce":5, "carrot":10,"blueberry":15,"mushroom":25}
+plantNames = ["pinkFlower", "blueFlower", "yellowFlower", "tomato","blueberry","lettuce","carrot","mushroom","coconut"]
+plantPoints = {"pinkFlower": 30, "blueFlower": 10, "yellowFlower": 15, "tomato":5, "lettuce":5, "carrot":10,"blueberry":15,"mushroom":25,"coconut":30}
 
 plantSprites = {
     "pinkFlower": PlantSprite(
@@ -155,6 +155,12 @@ plantSprites = {
         Sprite(16, 112, 16, 16),
         Sprite(0, 192, 16, 16),
         Sprite(0, 112, 16, 16),
+        Sprite(16,144,16,16),
+    ),
+    "coconut": PlantSprite(
+        Sprite(16, 208, 16, 16,12),
+        Sprite(32, 208, 16, 16,12),
+        Sprite(0, 208, 16, 16,12),
         Sprite(16,144,16,16),
     ),
     "Empty": PlantSprite(
