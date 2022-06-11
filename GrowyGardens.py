@@ -37,10 +37,11 @@ bottom_bar_height = 8
 path_size = 8
 bed_row_size = 5
 bed_column_size = 5
+diag_speed_coef = 0.707 # Aprox cos(45 degrees), and is what each axis of speed should be multiplied by if the player is moving in 2 axes at once
 
 # Balance Variables
 game_duration = 3 * 60 * 30
-player_speed = 2
+player_speed = 2.2
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
@@ -341,7 +342,9 @@ class Bed:
                 self.waterLeft = 0
 
                 # Play death music
-                pyxel.play(1, 2)
+                pyxel.play(0, 2)
+
+                self.crow.atePlant = False # Reset it
 
             if self.crow.arrived and self.crow.onWayBack:
                 self.crow = True  # Crow is gone
@@ -391,24 +394,30 @@ class Player:
         self.closestBed = self.computeClosestBed()
 
     def move(self) -> int:  # Returns the number of points earned
+        vertSpeed = self.speed
+        horizSpeed = self.speed
+        if input_pressed(left_keys) ^ input_pressed(right_keys): # if moving horizontally
+            vertSpeed *= diag_speed_coef
+        if input_pressed(up_keys) ^ input_pressed(down_keys):
+            horizSpeed *= diag_speed_coef
         if input_pressed(up_keys):
-            if self.y - 1 >= 0:
-                self.y -= self.speed
+            if self.y - vertSpeed >= 0:
+                self.y -= vertSpeed
                 self.direction = 3
                 self.closestBed = self.computeClosestBed()
         if input_pressed(down_keys):
-            if self.y + 1 < field_y - personStandFrontSprite.sheetH:
-                self.y += self.speed
+            if self.y + vertSpeed < field_y - personStandFrontSprite.sheetH:
+                self.y += vertSpeed
                 self.direction = 0
                 self.closestBed = self.computeClosestBed()
         if input_pressed(left_keys):
-            if self.x - 1 >= 0:
-                self.x -= self.speed
+            if self.x - horizSpeed >= 0:
+                self.x -= horizSpeed
                 self.direction = 1
                 self.closestBed = self.computeClosestBed()
         if input_pressed(right_keys):
-            if self.x + 1 < field_x - personStandFrontSprite.sheetW:
-                self.x += self.speed
+            if self.x + horizSpeed < field_x - personStandFrontSprite.sheetW:
+                self.x += horizSpeed
                 self.direction = 2
                 self.closestBed = self.computeClosestBed()
         return self.closestBed.collect()
