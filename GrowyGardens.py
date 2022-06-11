@@ -265,6 +265,7 @@ class Bed:
         self.hasCrowSpawned = False
         self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
         self.centerCoords = (self.x + dryBedSprite.sheetW / 2, self.y + dryBedSprite.sheetH / 2)
+        self.readyTime = 0
 
     def draw(self) -> None:
         if self.isWatered:
@@ -300,13 +301,14 @@ class Bed:
             self.maturityAge = randint(min_plant_age, max_plant_age)
             self.timeUntilCrow = randint(30, int(self.maturityAge * (1/crow_chance)))
             self.hasCrowSpawned = False
+            self.readyTime = 0
 
     def bonk(self) -> None:
         if type(self.crow) == Crow:
             self.crow.shoo()
 
     def collect(self) -> int:
-        if self.isPopulated and self.plantAge >= self.maturityAge + collectCooldown and not self.isDead:
+        if self.isPopulated and self.plantAge >= self.maturityAge and not self.isDead and self.readyTime + collectCooldown <= pyxel.frame_count :
             pointsToGive = plantPoints[self.plantType]
             
             self.isPopulated = False
@@ -345,6 +347,8 @@ class Bed:
                 self.hasCrowSpawned = True
 
             if self.plantAge >= self.maturityAge:
+                if self.state != 2:
+                    self.readyTime = pyxel.frame_count
                 self.state = 2
             elif self.plantAge >= self.maturityAge // 2:
                 self.state = 1
