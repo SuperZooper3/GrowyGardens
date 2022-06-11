@@ -42,12 +42,12 @@ diag_speed_coef = 0.707 # Aprox cos(45 degrees), and is what each axis of speed 
 # Balance Variables
 game_duration = 3 * 60 * 30
 player_speed = 2.2
+
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
 max_plant_dry = 17 * 30
-min_plant_age = 10 * 30
-max_plant_age = 20 * 30
+
 crow_eat_time = 5 * 30
 crow_chance = 0.3
 actionCooldown = 0.2 * 30
