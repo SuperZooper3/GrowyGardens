@@ -449,7 +449,7 @@ class Player:
 
 class App:
     def __init__(self):
-        pyxel.init(field_x, field_y + bottom_bar_height, title="Nuit du c0de 2022")
+        pyxel.init(field_x, field_y + bottom_bar_height, title="Growy Gardens")
         pyxel.load("GrowyGardens.pyxres")
         self.startFrame = float("inf")
         self.points = 0
