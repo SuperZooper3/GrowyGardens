@@ -471,7 +471,7 @@ class App:
 
     def update(self) -> None:
         if not self.gameStarted:
-            if pyxel.btn(pyxel.KEY_1):
+            if input_pressed(water_keys):
                 self.gameStarted = True
                 self.startFrame = pyxel.frame_count
         if not self.gameOver and self.gameStarted:
@@ -501,9 +501,6 @@ class App:
             for row in self.bedList:
                 for bed in row:
                     bed.draw()
-
-            for row in self.bedList:
-                for bed in row:
                     bed.drawLandedCrow()
 
             self.player.draw()
