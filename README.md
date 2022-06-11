@@ -2,6 +2,8 @@
 
 *Version en français dessous*
 
+![Screenshot of the game](screenshot.png)
+
 Welcome to our garden in full growth: **Growy Gardens!** 
 
 The objective of the game is to **grow the most plants** you can in **3 minutes** by quickly *running around*, **planting, watering and swatting** away hungry crows.
