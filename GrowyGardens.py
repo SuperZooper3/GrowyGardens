@@ -39,7 +39,7 @@ bed_row_size = 5
 bed_column_size = 5
 
 # Balance Variables
-game_duration = 180 * 30
+game_duration = 3 * 60 * 30
 player_speed = 2
 min_plant_age = 10 * 30
 max_plant_age = 20 * 30
@@ -51,7 +51,6 @@ crow_eat_time = 5 * 30
 crow_chance = 0.3
 actionCooldown = 0.2 * 30
 collectCooldown = 15  # Number of frames after growing before smth can be collected
-
 
 class Sprite:
     def __init__(self, sheetX: int, sheetY: int, sheetW: int, sheetH: int, colourKey: int = 0):
@@ -500,8 +499,7 @@ class App:
             self.points += self.player.move()
             self.player.act()
 
-            self.clockState = (
-                ((int(pyxel.frame_count-self.startFrame)/30) % 60)//15)
+            self.clockState = int(((pyxel.frame_count - self.startFrame) * 4) / game_duration) % 4 # This mod is just incase anything funky happens
 
     def draw(self) -> None:
         if not self.gameStarted:
@@ -510,8 +508,9 @@ class App:
             pyxel.rect(20, 20, 88, 88, 0)
             pyxel.text(43, 24, "GrowyGardens", 10)
             pyxel.text(
-                24, 42, "Bienvenue dans le\njeu GrowyGardens.\nRecoltez le plus de \nplantes possibles\nen 3 minutes.", 7)
+                24, 42, f"Bienvenue dans le\njeu GrowyGardens.\nRecoltez le plus de \nplantes possibles\nen {int(game_duration/(30 * 60))} minutes.", 7)
             pyxel.text(24, 86, "Appuyez sur 1 pour\njouer.", 7)
+        
         elif not self.gameOver and self.gameStarted:
             pyxel.cls(3)
             pyxel.bltm(0, 0, 0, 0, 0, 128, 128)  # draw the tilemap
