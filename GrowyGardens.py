@@ -1,3 +1,4 @@
+from typing import List
 import pyxel
 from random import randint
 from math import sqrt
@@ -14,14 +15,14 @@ courrez dessus pour la prendre et regardez votre score augmenter. Bonne chance!
 """
 
 # Key bindings
-up_keys = [pyxel.KEY_UP, pyxel.KEY_W]
-down_keys = [pyxel.KEY_DOWN, pyxel.KEY_S]
-left_keys = [pyxel.KEY_LEFT, pyxel.KEY_A]
-right_keys = [pyxel.KEY_RIGHT, pyxel.KEY_D]
+UP_KEYS = [pyxel.KEY_UP, pyxel.KEY_W]
+DOWN_KEYS = [pyxel.KEY_DOWN, pyxel.KEY_S]
+LEFT_KEYS = [pyxel.KEY_LEFT, pyxel.KEY_A]
+RIGHT_KEYS = [pyxel.KEY_RIGHT, pyxel.KEY_D]
 
-water_keys = [pyxel.KEY_1, pyxel.KEY_J]
-plant_keys = [pyxel.KEY_2, pyxel.KEY_K]
-bonk_keys = [pyxel.KEY_3, pyxel.KEY_L]
+WATER_KEYS = [pyxel.KEY_1, pyxel.KEY_J]
+PLANT_KEYS = [pyxel.KEY_2, pyxel.KEY_K]
+BONK_KEYS = [pyxel.KEY_3, pyxel.KEY_L]
 
 
 def input_pressed(key_list):
@@ -31,27 +32,27 @@ def input_pressed(key_list):
     return False
 
 
-field_x = 128
-field_y = 120
-bottom_bar_height = 8
-path_size = 8
-bed_row_size = 5
-bed_column_size = 5
-diag_speed_coef = 0.707 # Aprox cos(45 degrees), and is what each axis of speed should be multiplied by if the player is moving in 2 axes at once
+FIELD_X = 128
+FIELD_Y = 120
+BOTTOM_BAR_HEIGHT = 8
+PATH_SIZE = 8
+BED_ROW_SIZE = 5
+BED_COLUMN_SIZE = 5
+DIAG_SPEED_COEF = 0.707 # Aprox cos(45 degrees), and is what each axis of speed should be multiplied by if the player is moving in 2 axes at once
 
 # Balance Variables
-game_duration = 3 * 60 * 30
-player_speed = 2.2
+GAME_DURATION = 3 * 60 * 30
+PLAYER_SPEED = 2.2
 
-min_plant_age = 10 * 30
-max_plant_age = 20 * 30
-min_plant_dry = 5 * 30
-max_plant_dry = 17 * 30
+MIN_PLANT_AGE = 10 * 30
+MAX_PLANT_AGE = 20 * 30
+MIN_PLANT_AGE = 5 * 30
+MAX_PLANT_AGE = 17 * 30
 
-crow_eat_time = 3 * 30
-crow_chance = 0.3
-actionCooldown = 0.2 * 30
-collectCooldown = 15  # Number of frames after growing before smth can be collected
+CROW_EAT_TIME = 3 * 30
+CROW_CHANCE = 0.3
+ACTION_COOLDOWN = 0.2 * 30
+COLLECT_COOLDOWN = 15  # Number of frames after growing before smth can be collected
 
 class Sprite:
     def __init__(self, sheetX: int, sheetY: int, sheetW: int, sheetH: int, colourKey: int = 0):
@@ -87,33 +88,33 @@ class PlantSprite:
             print("plantSpriteDrawError")
 
 
-canIconSprite = Sprite(48, 96, 8, 8)
-batIconSprite = Sprite(56, 96, 8, 8)
-seedBagIconSprite = Sprite(48, 104, 8, 8)
-coinIconSprite = Sprite(56, 104, 8, 8)
-clockFirstSprite = Sprite(48, 112, 16, 8, 7)
-clockSecondSprite = Sprite(48, 120, 16, 8, 7)
-clockThirdSprite = Sprite(48, 128, 16, 8, 7)
-clockFourthSprite = Sprite(48, 136, 16, 8, 7)
-dryBedSprite = Sprite(32, 128, 16, 16)
-wetBedSprite = Sprite(32, 144, 16, 16)
-crowSprite = Sprite(0, 160, 16, 16, 7)
-crowFlySprite = Sprite(16, 160, 16, 16, 7)
+CAN_ICON_SPRITE = Sprite(48, 96, 8, 8)
+BAT_ICON_SPRITE = Sprite(56, 96, 8, 8)
+SEED_BAG_ICON_SPRITE = Sprite(48, 104, 8, 8)
+COIN_ICON_SPRITE = Sprite(56, 104, 8, 8)
+CLOCK_FIRST_SPRITE = Sprite(48, 112, 16, 8, 7)
+CLOCK_SECOND_SPRITE = Sprite(48, 120, 16, 8, 7)
+CLOCK_THIRD_SPRITE = Sprite(48, 128, 16, 8, 7)
+CLOCK_FOURTH_SPRITE = Sprite(48, 136, 16, 8, 7)
+DRY_BED_SPRITE = Sprite(32, 128, 16, 16)
+WET_BED_SPRITE = Sprite(32, 144, 16, 16)
+CROW_SPRITE = Sprite(0, 160, 16, 16, 7)
+CROW_FLY_SPRITE = Sprite(16, 160, 16, 16, 7)
 
-personStandFrontSprite = Sprite(32, 0, 16, 30)
-personStandBackSprite = Sprite(48, 0, 16, 30)
-personLeftSprite = Sprite(48, 32, 16, 30)
-personRightSprite = Sprite(32, 32, 16, 30)
-personBonkSprite = Sprite(32, 64, 16, 30)
-personWaterSprite = Sprite(48, 64, 16, 30)
-personPlantSprite = Sprite(32, 96, 16, 30)
+PERSON_STAND_FRONT_SPRITE = Sprite(32, 0, 16, 30)
+PERSON_STAND_BACK_SPRITE = Sprite(48, 0, 16, 30)
+PERSON_LEFT_SPRITE = Sprite(48, 32, 16, 30)
+PERSON_RIGHT_SPRITE = Sprite(32, 32, 16, 30)
+PERSON_BONK_SPRITE = Sprite(32, 64, 16, 30)
+PERSON_WATER_SPRITE = Sprite(48, 64, 16, 30)
+PERSON_PLANT_SPRITE = Sprite(32, 96, 16, 30)
 
-plantNames = ["pinkFlower", "blueFlower", "yellowFlower",
+PLANT_NAMES = ["pinkFlower", "blueFlower", "yellowFlower",
               "tomato", "blueberry", "lettuce", "carrot", "mushroom"]
-plantPoints = {"pinkFlower": 30, "blueFlower": 10, "yellowFlower": 15,
+PLANT_POINTS = {"pinkFlower": 30, "blueFlower": 10, "yellowFlower": 15,
                "tomato": 5, "lettuce": 5, "carrot": 10, "blueberry": 15, "mushroom": 25}
 
-plantSprites = {
+PLANT_SPRITES = {
     "pinkFlower": PlantSprite(
         Sprite(16, 0, 16, 16),
         Sprite(0, 176, 16, 16),
@@ -178,20 +179,20 @@ class Crow:
         self.targetY = targetY
         self.arrived = False
         self.onWayBack = False
-        self.clock = crow_eat_time
+        self.clock = CROW_EAT_TIME
         self.atePlant = False
         edge = randint(0, 3)  # 0 bottom, 1 left, 2 top, 3 right
         if edge == 0:
             self.x = randint(0, 127)
-            self.y = 127 + crowSprite.sheetH
+            self.y = 127 + CROW_SPRITE.sheetH
         elif edge == 1:
-            self.x = 0 - crowSprite.sheetW
+            self.x = 0 - CROW_SPRITE.sheetW
             self.y = randint(0, 127)
         elif edge == 2:
             self.x = randint(0, 127)
-            self.y = 0 - crowSprite.sheetH
+            self.y = 0 - CROW_SPRITE.sheetH
         elif edge == 3:
-            self.x = 127 + crowSprite.sheetW
+            self.x = 127 + CROW_SPRITE.sheetW
             self.y = randint(0, 127)
 
     def update(self) -> None:
@@ -205,15 +206,15 @@ class Crow:
                 edge = randint(0, 3)  # 0 bottom, 1 left, 2 top, 3 right
                 if edge == 0:
                     self.targetX = randint(0, 127)
-                    self.targetY = 127 + crowSprite.sheetH
+                    self.targetY = 127 + CROW_SPRITE.sheetH
                 elif edge == 1:
-                    self.targetX = 0 - crowSprite.sheetW
+                    self.targetX = 0 - CROW_SPRITE.sheetW
                     self.targetY = randint(0, 127)
                 elif edge == 2:
                     self.targetX = randint(0, 127)
-                    self.targetY = 0 - crowSprite.sheetH
+                    self.targetY = 0 - CROW_SPRITE.sheetH
                 elif edge == 3:
-                    self.targetX = 127 + crowSprite.sheetW
+                    self.targetX = 127 + CROW_SPRITE.sheetW
                     self.targetY = randint(0, 127)
 
         # Movement
@@ -235,22 +236,22 @@ class Crow:
             edge = randint(0, 3)  # 0 bottom, 1 left, 2 top, 3 right
             if edge == 0:
                 self.targetX = randint(0, 127)
-                self.targetY = 127 + crowSprite.sheetH
+                self.targetY = 127 + CROW_SPRITE.sheetH
             elif edge == 1:
-                self.targetX = 0 - crowSprite.sheetW
+                self.targetX = 0 - CROW_SPRITE.sheetW
                 self.targetY = randint(0, 127)
             elif edge == 2:
                 self.targetX = randint(0, 127)
-                self.targetY = 0 - crowSprite.sheetH
+                self.targetY = 0 - CROW_SPRITE.sheetH
             elif edge == 3:
-                self.targetX = 127 + crowSprite.sheetW
+                self.targetX = 127 + CROW_SPRITE.sheetW
                 self.targetY = randint(0, 127)
 
     def draw(self) -> None:
         if self.arrived:
-            crowSprite.draw(self.x, self.y)
+            CROW_SPRITE.draw(self.x, self.y)
         else:
-            crowFlySprite.draw(self.x, self.y)
+            CROW_FLY_SPRITE.draw(self.x, self.y)
 
 
 class Bed:
@@ -268,18 +269,18 @@ class Bed:
         self.crow = None
         self.hasCrowSpawned = False
         self.state = 0  # n = 0 for seed, n = 1 for sprout, n = 2 for grown
-        self.centerCoords = (self.x + dryBedSprite.sheetW / 2,
-                             self.y + dryBedSprite.sheetH / 2)
+        self.centerCoords = (self.x + DRY_BED_SPRITE.sheetW / 2,
+                             self.y + DRY_BED_SPRITE.sheetH / 2)
         self.readyTime = 0
 
     def draw(self) -> None:
         if self.isWatered:
-            wetBedSprite.draw(self.x, self.y)
+            WET_BED_SPRITE.draw(self.x, self.y)
         else:
-            dryBedSprite.draw(self.x, self.y)
+            DRY_BED_SPRITE.draw(self.x, self.y)
         if self.isPopulated or self.isDead:
             try:
-                sprite = plantSprites[self.plantType]
+                sprite = PLANT_SPRITES[self.plantType]
                 sprite.draw(self.x, self.y, self.state)
             except:
                 print("Error getting plant sprite", self.isDead,
@@ -295,18 +296,18 @@ class Bed:
 
     def water(self) -> None:
         if not self.isDead:
-            self.waterLeft = randint(min_plant_dry, max_plant_dry)
+            self.waterLeft = randint(MIN_PLANT_AGE, MAX_PLANT_AGE)
             self.isWatered = True
 
     def plant(self) -> None:
         if not self.isPopulated:
-            type = plantNames[randint(0, len(plantNames)-1)]
+            type = PLANT_NAMES[randint(0, len(PLANT_NAMES)-1)]
             self.isPopulated = True
             self.plantType = type
             self.plantAge = 0
-            self.maturityAge = randint(min_plant_age, max_plant_age)
+            self.maturityAge = randint(MIN_PLANT_AGE, MAX_PLANT_AGE)
             self.timeUntilCrow = randint(
-                30, int(self.maturityAge * (1/crow_chance)))
+                30, int(self.maturityAge * (1/CROW_CHANCE)))
             self.hasCrowSpawned = False
             self.readyTime = 0
 
@@ -315,8 +316,8 @@ class Bed:
             self.crow.shoo()
 
     def collect(self) -> int:
-        if self.isPopulated and self.plantAge >= self.maturityAge and not self.isDead and self.readyTime + collectCooldown <= pyxel.frame_count:
-            pointsToGive = plantPoints[self.plantType]
+        if self.isPopulated and self.plantAge >= self.maturityAge and not self.isDead and self.readyTime + COLLECT_COOLDOWN <= pyxel.frame_count:
+            pointsToGive = PLANT_POINTS[self.plantType]
 
             self.isPopulated = False
             self.plantType = "Empty"
@@ -381,50 +382,50 @@ class Bed:
 
 
 class Player:
-    def __init__(self, bedList):
+    def __init__(self, bedList: List[List[Bed]]):
         self.x = 0
         self.y = 0
-        self.speed = player_speed
+        self.speed = PLAYER_SPEED
         self.cooldown = 0
         self.direction = 0  # 0 down, 1 left, 2 right, 3 up, for sprite drawing
         self.lastAction = 0  # 0 water, 1 plant, 2 bonk, also for drawing
         self.bedList = bedList
-        self.centerCoords = (self.x + personStandFrontSprite.sheetW / 2,
-                             self.y + personStandFrontSprite.sheetH / 2)
+        self.centerCoords = (self.x + PERSON_STAND_FRONT_SPRITE.sheetW / 2,
+                             self.y + PERSON_STAND_FRONT_SPRITE.sheetH / 2)
         self.closestBed = self.computeClosestBed()
 
     def move(self) -> int:  # Returns the number of points earned
         vertSpeed = self.speed
         horizSpeed = self.speed
-        if input_pressed(left_keys) ^ input_pressed(right_keys): # if moving horizontally
-            vertSpeed *= diag_speed_coef
-        if input_pressed(up_keys) ^ input_pressed(down_keys):
-            horizSpeed *= diag_speed_coef
-        if input_pressed(up_keys):
+        if input_pressed(LEFT_KEYS) ^ input_pressed(RIGHT_KEYS): # if moving horizontally
+            vertSpeed *= DIAG_SPEED_COEF
+        if input_pressed(UP_KEYS) ^ input_pressed(DOWN_KEYS):
+            horizSpeed *= DIAG_SPEED_COEF
+        if input_pressed(UP_KEYS):
             if self.y - vertSpeed >= 0:
                 self.y -= vertSpeed
                 self.direction = 3
                 self.closestBed = self.computeClosestBed()
-        if input_pressed(down_keys):
-            if self.y + vertSpeed < field_y - personStandFrontSprite.sheetH:
+        if input_pressed(DOWN_KEYS):
+            if self.y + vertSpeed < FIELD_Y - PERSON_STAND_FRONT_SPRITE.sheetH:
                 self.y += vertSpeed
                 self.direction = 0
                 self.closestBed = self.computeClosestBed()
-        if input_pressed(left_keys):
+        if input_pressed(LEFT_KEYS):
             if self.x - horizSpeed >= 0:
                 self.x -= horizSpeed
                 self.direction = 1
                 self.closestBed = self.computeClosestBed()
-        if input_pressed(right_keys):
-            if self.x + horizSpeed < field_x - personStandFrontSprite.sheetW:
+        if input_pressed(RIGHT_KEYS):
+            if self.x + horizSpeed < FIELD_X - PERSON_STAND_FRONT_SPRITE.sheetW:
                 self.x += horizSpeed
                 self.direction = 2
                 self.closestBed = self.computeClosestBed()
         return self.closestBed.collect()
 
     def computeClosestBed(self) -> Bed:
-        self.centerCoords = (self.x + personStandFrontSprite.sheetW / 2,
-                             self.y + personStandFrontSprite.sheetH / 2)
+        self.centerCoords = (self.x + PERSON_STAND_FRONT_SPRITE.sheetW / 2,
+                             self.y + PERSON_STAND_FRONT_SPRITE.sheetH / 2)
         closest = self.bedList[0][0]
         closestDist = sqrt((closest.centerCoords[0] - self.centerCoords[0])**2 + (
             closest.centerCoords[1] - self.centerCoords[1])**2)
@@ -440,16 +441,16 @@ class Player:
     def act(self) -> None:
         self.cooldown -= 1
         if self.cooldown <= 0:
-            if input_pressed(water_keys):
-                self.cooldown = actionCooldown
+            if input_pressed(WATER_KEYS):
+                self.cooldown = ACTION_COOLDOWN
                 self.lastAction = 0
                 self.closestBed.water()
-            elif input_pressed(plant_keys):
-                self.cooldown = actionCooldown
+            elif input_pressed(PLANT_KEYS):
+                self.cooldown = ACTION_COOLDOWN
                 self.lastAction = 1
                 self.closestBed.plant()
-            elif input_pressed(bonk_keys):
-                self.cooldown = actionCooldown
+            elif input_pressed(BONK_KEYS):
+                self.cooldown = ACTION_COOLDOWN
                 self.lastAction = 2
                 self.closestBed.bonk()
         # print("act",self.lastAction,self.cooldown)
@@ -457,25 +458,25 @@ class Player:
     def draw(self) -> None:
         if self.cooldown > 0:
             if self.lastAction == 0:
-                personWaterSprite.draw(self.x, self.y)
+                PERSON_WATER_SPRITE.draw(self.x, self.y)
             elif self.lastAction == 1:
-                personPlantSprite.draw(self.x, self.y)
+                PERSON_PLANT_SPRITE.draw(self.x, self.y)
             elif self.lastAction == 2:
-                personBonkSprite.draw(self.x, self.y)
+                PERSON_BONK_SPRITE.draw(self.x, self.y)
         else:
             if self.direction == 0:
-                personStandFrontSprite.draw(self.x, self.y)
+                PERSON_STAND_FRONT_SPRITE.draw(self.x, self.y)
             elif self.direction == 3:
-                personStandBackSprite.draw(self.x, self.y)
+                PERSON_STAND_BACK_SPRITE.draw(self.x, self.y)
             elif self.direction == 1:
-                personLeftSprite.draw(self.x, self.y)
+                PERSON_LEFT_SPRITE.draw(self.x, self.y)
             elif self.direction == 2:
-                personRightSprite.draw(self.x, self.y)
+                PERSON_RIGHT_SPRITE.draw(self.x, self.y)
 
 
 class App:
     def __init__(self):
-        pyxel.init(field_x, field_y + bottom_bar_height, title="Growy Gardens")
+        pyxel.init(FIELD_X, FIELD_Y + BOTTOM_BAR_HEIGHT, title="Growy Gardens")
         pyxel.load("GrowyGardens.pyxres")
         self.startFrame = float("inf")
         self.points = 0
@@ -485,10 +486,10 @@ class App:
         self.bedList = [
             [
                 Bed(
-                    (x+1) * path_size + x * dryBedSprite.sheetW,
-                    (y+1) * path_size + y * dryBedSprite.sheetH
-                ) for x in range(bed_row_size)
-            ] for y in range(bed_column_size)
+                    (x+1) * PATH_SIZE + x * DRY_BED_SPRITE.sheetW,
+                    (y+1) * PATH_SIZE + y * DRY_BED_SPRITE.sheetH
+                ) for x in range(BED_ROW_SIZE)
+            ] for y in range(BED_COLUMN_SIZE)
         ]
         self.player = Player(self.bedList)
 
@@ -496,11 +497,11 @@ class App:
 
     def update(self) -> None:
         if not self.gameStarted:
-            if input_pressed(water_keys):
+            if input_pressed(WATER_KEYS):
                 self.gameStarted = True
                 self.startFrame = pyxel.frame_count
         if not self.gameOver and self.gameStarted:
-            if pyxel.frame_count - self.startFrame >= game_duration:
+            if pyxel.frame_count - self.startFrame >= GAME_DURATION:
                 self.gameOver = True
             for row in self.bedList:
                 for bed in row:
@@ -508,7 +509,7 @@ class App:
             self.points += self.player.move()
             self.player.act()
 
-            self.clockState = int(((pyxel.frame_count - self.startFrame) * 4) / game_duration) % 4 # This mod is just incase anything funky happens
+            self.clockState = int(((pyxel.frame_count - self.startFrame) * 4) / GAME_DURATION) % 4 # This mod is just incase anything funky happens
 
     def draw(self) -> None:
         if not self.gameStarted:
@@ -516,8 +517,9 @@ class App:
             pyxel.bltm(0, 0, 0, 0, 0, 128, 128)
             pyxel.rect(20, 20, 88, 88, 0)
             pyxel.text(43, 24, "GrowyGardens", 10)
-            pyxel.text(
-                24, 42, f"Bienvenue dans le\njeu GrowyGardens.\nRecoltez le plus de \nplantes possibles\nen {int(game_duration/(30 * 60))} minutes.", 7)
+            pyxel.text(24, 42,
+                f"Bienvenue dans le\njeu GrowyGardens.\nRecoltez le plus de \nplantes possibles\nen {int(GAME_DURATION/(30 * 60))} minutes.",
+            7)
             pyxel.text(24, 86, "Appuyez sur 1 pour\njouer.", 7)
         
         elif not self.gameOver and self.gameStarted:
@@ -537,34 +539,34 @@ class App:
 
             # Draw the bottom bar
 
-            coinIconSprite.draw(0, 120)
+            COIN_ICON_SPRITE.draw(0, 120)
             pyxel.text(10, 121, str(self.points), col=0)
 
-            canIconSprite.draw(42, 120)
+            CAN_ICON_SPRITE.draw(42, 120)
             pyxel.text(50, 121, str(1), col=0)
 
-            seedBagIconSprite.draw(58, 120)
+            SEED_BAG_ICON_SPRITE.draw(58, 120)
             pyxel.text(66, 121, str(2), col=0)
 
-            batIconSprite.draw(74, 120)
+            BAT_ICON_SPRITE.draw(74, 120)
             pyxel.text(80, 121, str(3), col=0)
 
             # Draw clock
             if self.clockState == 0:
-                clockFirstSprite.draw(112, 120)
+                CLOCK_FIRST_SPRITE.draw(112, 120)
             if self.clockState == 1:
-                clockSecondSprite.draw(112, 120)
+                CLOCK_SECOND_SPRITE.draw(112, 120)
             if self.clockState == 2:
-                clockThirdSprite.draw(112, 120)
+                CLOCK_THIRD_SPRITE.draw(112, 120)
             if self.clockState == 3:
-                clockFourthSprite.draw(112, 120)
+                CLOCK_FOURTH_SPRITE.draw(112, 120)
 
         else:
             # Render game over screen
             pyxel.rect(20, 20, 88, 88, 0)
             pyxel.text(43, 24, "C'EST FINI!", 10)
             pyxel.text(
-                24, 42, f"Vous avez reussi\na obtenir {self.points} points\nen {int(game_duration/30)} secondes.", 7)
+                24, 42, f"Vous avez reussi\na obtenir {self.points} points\nen {int(GAME_DURATION/30)} secondes.", 7)
             pyxel.text(
                 24, 68, "Appuyez sur la touche\nEscape/Echapper pour\nquitter le jeu.", 7)
 
