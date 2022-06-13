@@ -4,9 +4,9 @@
 
 ![Screenshot of the game](screenshot.png)
 
-Welcome to our garden in full growth: **Growy Gardens!** 
+Welcome to our garden in full growth: **Growy Gardens!**
 
-The objective of the game is to **grow the most plants** you can in **3 minutes** by quickly *running around*, **planting, watering and swatting** away hungry crows.
+The objective of the game is to **grow the most plants** you can in **3 minutes** by quickly **running around**, **planting**, **watering** and **swatting** away hungry crows.
 
 ## Mechanics
 
@@ -22,14 +22,14 @@ The objective of the game is to **grow the most plants** you can in **3 minutes*
 
 ## Keybinds
 
-- **W or Up** Arrow: Move up
-- **S or Down** Arrow: Move down
-- **A or Left** Arrow: Move left
-- **D or Right** Arrow: Move right
+- **W** or **Up** Arrow: Move up
+- **S** or **Down** Arrow: Move down
+- **A** or **Left** Arrow: Move left
+- **D** or **Right** Arrow: Move right
 
-- **1 or J**: Water the garden
-- **2 or K**: Plant a seed
-- **3 or L**: Bonk a crow
+- **1** or **J**: Water the garden
+- **2** or **K**: Plant a seed
+- **3** or **L**: Bonk a crow
 
 ## Installation
 
