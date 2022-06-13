@@ -48,7 +48,7 @@ max_plant_age = 20 * 30
 min_plant_dry = 5 * 30
 max_plant_dry = 17 * 30
 
-crow_eat_time = 5 * 30
+crow_eat_time = 3 * 30
 crow_chance = 0.3
 actionCooldown = 0.2 * 30
 collectCooldown = 15  # Number of frames after growing before smth can be collected
